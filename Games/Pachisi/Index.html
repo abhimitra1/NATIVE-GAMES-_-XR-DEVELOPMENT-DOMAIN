@@ -1,0 +1,1837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pachisi (PCH) - Interactive Soundscape Edition</title>
+    <!-- Traditional Indian Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;700&family=Rozha+One&family=Tiro+Devanagari+Hindi&family=Yatra+One&display=swap" rel="stylesheet">
+
+    <style>
+        /* IKS DESIGN BIBLE MASTER TOKENS */
+        :root {
+            --iks-ink-900: #17120E;
+            --iks-ink-700: #3B2F26;
+            --iks-ink-500: #6B5B4B;
+            --iks-stone-900: #241C16;
+            --iks-stone-700: #3A2E25;
+            --iks-sand-050: #FBF4E8;
+            --iks-sand-100: #F5E9D6;
+            --iks-sand-200: #EBDBC0;
+            --iks-sand-400: #C6AC83;
+            --iks-haldi-500: #E8A317;
+            --iks-haldi-600: #C4860C;
+            
+            /* BT-3 Indigo Cloth Theme Tokens */
+            --bt3-dark-cell: #1D3357;
+            --bt3-light-cell: #F5E9D6;
+            --bt3-frame: #2F4B7C;
+            
+            /* Player Accent Colors */
+            --p1-sindoor: #C8402F;
+            --p2-peacock: #10727F;
+            --p3-haldi: #E8A317;
+            --p4-indigo: #2F4B7C;
+            
+            /* Typography */
+            --font-display: 'Yatra One', 'Rozha One', 'Tiro Devanagari Hindi', serif;
+            --font-body: 'Mukta', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
+            background-color: var(--iks-stone-900);
+            background-image: radial-gradient(circle at 50% 50%, rgba(24, 15, 10, 0.75), rgba(12, 8, 5, 0.95)), 
+                              url('https://img.magnific.com/premium-photo/texture-abstract-fabric-textiles-with-indian-motifs_1033579-218227.jpg?semt=ais_hybrid&w=740&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: var(--font-body);
+            color: var(--iks-sand-050);
+            padding: 10px;
+            overflow: hidden;
+        }
+
+        /* DEFAULT MENU CONTAINER SIZE */
+        #app-container {
+            width: 100%;
+            max-width: 440px; 
+            height: auto;
+            min-height: 520px;
+            background-color: rgba(36, 28, 22, 0.92);
+            backdrop-filter: blur(8px);
+            border-radius: 20px;
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.8), 0 0 0 3px var(--iks-haldi-500);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 16px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* LARGE / FULLSCREEN INTERFACE FOR GAMEPLAY */
+        #app-container.fullscreen {
+            max-width: 98vw;
+            width: 98vw;
+            height: 96vh;
+            border-radius: 12px;
+            padding: 12px;
+            justify-content: space-between;
+        }
+
+        /* Screen Wrapper */
+        .screen {
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        /* HUD BAR */
+        .hud-bar {
+            width: 100%;
+            height: 52px;
+            background: var(--iks-stone-700);
+            border: 2px solid var(--iks-sand-400);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 14px;
+            flex-shrink: 0;
+        }
+
+        .hud-right-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-icon-setting {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(180deg, var(--iks-haldi-500) 0%, var(--iks-haldi-600) 100%);
+            border: none;
+            border-radius: 50%;
+            color: var(--iks-ink-900);
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 0 #8c5e00;
+        }
+
+        .btn-icon-setting:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 #8c5e00;
+        }
+
+        .user-pill {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--iks-sand-050);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-body);
+        }
+
+        .user-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 1.5px solid var(--iks-haldi-500);
+            object-fit: cover;
+            background-color: var(--iks-haldi-500);
+            color: var(--iks-ink-900);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .btn-gold {
+            background: linear-gradient(180deg, var(--iks-haldi-500) 0%, var(--iks-haldi-600) 100%);
+            border: none;
+            color: var(--iks-ink-900);
+            min-height: 38px;
+            min-width: 96px;
+            padding: 0 14px;
+            border-radius: 20px;
+            font-family: var(--font-body);
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #8c5e00;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-gold:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #8c5e00;
+        }
+
+        /* TITLE SCREEN */
+        .title-container {
+            text-align: center;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+
+        .game-title {
+            font-family: 'Yatra One', cursive;
+            font-size: 50px;
+            color: var(--iks-haldi-500);
+            text-shadow: 3px 3px 0px var(--iks-ink-900), 0 0 15px rgba(232, 163, 23, 0.4);
+            line-height: 1.1;
+        }
+
+        .game-subtitle {
+            font-family: 'Rozha One', serif;
+            font-size: 13px;
+            color: var(--iks-sand-200);
+            letter-spacing: 2px;
+            margin-top: 4px;
+        }
+
+        /* COMPACT & COMPACT REAL GAME UI OPTION BOXES */
+        .menu-options {
+            width: 100%;
+            max-width: 360px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .menu-btn {
+            width: 100%;
+            height: 44px;
+            padding: 0 14px;
+            background: linear-gradient(180deg, #372A20 0%, #221811 100%);
+            border: 1.5px solid var(--iks-haldi-500);
+            border-radius: 10px;
+            color: var(--iks-sand-050);
+            font-family: var(--font-display);
+            font-size: 14px;
+            letter-spacing: 0.8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 3px 6px rgba(0,0,0,0.5);
+            transition: all 0.15s ease-in-out;
+            position: relative;
+        }
+
+        .menu-btn:hover {
+            background: linear-gradient(180deg, #4A3A2D 0%, #2A1F17 100%);
+            border-color: #fce392;
+            transform: translateY(-1px);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 5px 10px rgba(0,0,0,0.6);
+        }
+
+        .menu-btn:active {
+            transform: translateY(1px);
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.6), 0 1px 2px rgba(0,0,0,0.4);
+        }
+
+        .menu-btn-icon {
+            width: 26px;
+            height: 26px;
+            background: rgba(232, 163, 23, 0.15);
+            border: 1px solid var(--iks-haldi-500);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            color: var(--iks-haldi-500);
+            flex-shrink: 0;
+        }
+
+        .menu-btn-text {
+            flex-grow: 1;
+            text-align: left;
+            padding-left: 10px;
+        }
+
+        .menu-btn-arrow {
+            font-size: 12px;
+            color: var(--iks-sand-400);
+            opacity: 0.8;
+        }
+
+        /* LARGE INTERFACE BOARD FOR GAMEPLAY */
+        .board-container {
+            height: 72vh;
+            max-height: 720px;
+            aspect-ratio: 1 / 1;
+            background-color: var(--bt3-frame);
+            border: 6px solid var(--iks-sand-400);
+            border-radius: 12px;
+            display: grid;
+            grid-template-columns: repeat(19, 1fr);
+            grid-template-rows: repeat(19, 1fr);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.7);
+            position: relative;
+            margin: auto;
+        }
+
+        .c-cell {
+            background-color: var(--bt3-light-cell);
+            border: 0.5px solid var(--iks-ink-500);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            flex-wrap: wrap;
+            padding: 1px;
+            overflow: visible;
+        }
+
+        .c-cell.dark { background-color: var(--bt3-dark-cell); }
+        .c-cell.p1-home { background-color: #e8887d; }
+        .c-cell.p2-home { background-color: #5bb3be; }
+        .c-cell.p3-home { background-color: #f7d68d; }
+        .c-cell.p4-home { background-color: #7b94be; }
+
+        .center-charkoni {
+            grid-column: 9 / 12;
+            grid-row: 9 / 12;
+            background: var(--iks-sand-100);
+            border: 2px solid var(--iks-stone-900);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 2px;
+            padding: 2px;
+            z-index: 1;
+        }
+
+        .charkoni-nest {
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 2px;
+        }
+
+        .c-cell.castle::after {
+            content: '✕';
+            font-size: 18px; 
+            color: var(--iks-ink-700);
+            font-weight: bold;
+            position: absolute;
+            z-index: 0;
+            opacity: 0.65;
+        }
+
+        /* PAWNS / GOTIES */
+        .pawn {
+            width: 28px; 
+            height: 28px; 
+            border-radius: 50%;
+            border: 2px solid var(--iks-ink-900);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.7);
+            z-index: 2;
+            cursor: pointer;
+            transition: transform 0.15s ease;
+        }
+
+        .pawn.selectable {
+            animation: pulsePawn 0.8s infinite alternate;
+        }
+
+        @keyframes pulsePawn {
+            from { transform: scale(1); box-shadow: 0 0 4px var(--iks-haldi-500); }
+            to { transform: scale(1.45); box-shadow: 0 0 14px var(--iks-haldi-500); z-index: 10; }
+        }
+
+        .pawn-p1 { background-color: var(--p1-sindoor); }
+        .pawn-p2 { background-color: var(--p2-peacock); }
+        .pawn-p3 { background-color: var(--p3-haldi); }
+        .pawn-p4 { background-color: var(--p4-indigo); }
+
+        .pawn-badge {
+            font-size: 13px;
+            line-height: 1;
+            color: var(--iks-sand-050);
+            font-weight: bold;
+            pointer-events: none;
+        }
+
+        .pawn-p3 .pawn-badge { color: var(--iks-ink-900); }
+
+        .player-count-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 80px;
+            height: 70px;
+            border-radius: 12px;
+            background: var(--iks-sand-100);
+            border: 2px solid var(--iks-sand-400);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .player-count-option.selected {
+            border-color: var(--iks-haldi-500);
+            background-color: var(--iks-haldi-500);
+            color: var(--iks-ink-900);
+            transform: scale(1.05);
+        }
+
+        /* CONTROLS */
+        .game-controls {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--iks-stone-700);
+            padding: 10px 16px;
+            border-radius: 14px;
+            border: 2px solid var(--iks-sand-400);
+            flex-shrink: 0;
+            margin: 0 auto;
+        }
+
+        .turn-box {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .turn-label {
+            font-size: 12px;
+            color: var(--iks-sand-200);
+            letter-spacing: 0.5px;
+        }
+
+        .turn-player {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--iks-haldi-500);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-display);
+        }
+
+        .cowrie-box {
+            min-width: 170px;
+            min-height: 54px;
+            background: var(--iks-sand-100);
+            border: 2px solid var(--iks-haldi-500);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 12px;
+            cursor: pointer;
+            box-shadow: 0 4px 0 var(--iks-stone-900);
+        }
+
+        .cowrie-box:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 var(--iks-stone-900);
+        }
+
+        .cowries-container {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .cowrie-shell {
+            width: 15px;
+            height: 26px;
+            background: #FDFBF7;
+            border: 1.5px solid #8C765C;
+            border-radius: 50% 50% 45% 45%;
+            position: relative;
+            box-shadow: inset -1px -2px 2px rgba(0,0,0,0.15), 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .cowrie-shell.open::after {
+            content: '';
+            position: absolute;
+            top: 25%;
+            left: 30%;
+            width: 35%;
+            height: 50%;
+            background: #4A3B32;
+            border-radius: 40%;
+        }
+
+        .cowrie-shell.closed::after {
+            content: '';
+            position: absolute;
+            top: 15%;
+            left: 42%;
+            width: 16%;
+            height: 70%;
+            background: #D8C4A9;
+            border-radius: 10px;
+        }
+
+        @keyframes cowrieRoll {
+            0% { transform: rotate(0deg) scale(1) translateY(0); }
+            50% { transform: rotate(360deg) scale(1.2) translateY(-8px); }
+            100% { transform: rotate(720deg) scale(1) translateY(0); }
+        }
+
+        .cowrie-shell.rolling {
+            animation: cowrieRoll 0.45s ease-in-out;
+        }
+
+        .cowrie-val {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--iks-ink-900);
+            font-family: var(--font-display);
+            margin-left: 8px;
+        }
+
+        /* MODAL OVERLAYS */
+        .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(24, 18, 14, 0.92);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .modal-overlay.active { display: flex; }
+
+        .modal-box {
+            background: var(--iks-sand-050);
+            border: 3px solid var(--iks-haldi-500);
+            border-radius: 18px;
+            padding: 20px;
+            width: 90%;
+            max-width: 440px;
+            text-align: center;
+            color: var(--iks-ink-900);
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+
+        /* MEDIUM INTERFACE FOR RULES/GUIDE MODAL */
+        #modal-rules .modal-box {
+            max-width: 540px;
+            padding: 24px;
+        }
+
+        .modal-title {
+            font-family: var(--font-display);
+            font-size: 24px;
+            color: var(--iks-ink-900);
+            margin-bottom: 8px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: -14px;
+            right: -14px;
+            width: 38px;
+            height: 38px;
+            background: var(--p1-sindoor);
+            color: white;
+            border: 2px solid white;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .setting-item {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin: 16px 0;
+            text-align: left;
+        }
+
+        .setting-label-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--iks-ink-900);
+        }
+
+        .setting-slider {
+            width: 100%;
+            accent-color: var(--iks-haldi-600);
+            cursor: pointer;
+            height: 6px;
+        }
+
+        /* SLIDER GUIDE STYLING (MEDIUM INTERFACE) */
+        .guide-slider-wrapper {
+            position: relative;
+            width: 100%;
+            min-height: 280px;
+            background: #ffffff;
+            border: 1.5px solid var(--iks-sand-400);
+            border-radius: 12px;
+            padding: 16px;
+            margin: 12px 0;
+            text-align: left;
+            overflow: hidden;
+        }
+
+        .guide-slide {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+            font-size: 14px;
+            line-height: 1.5;
+            color: var(--iks-ink-900);
+        }
+
+        .guide-slide.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(8px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .guide-slide h3 {
+            font-family: var(--font-display);
+            font-size: 18px;
+            color: var(--iks-haldi-600);
+            margin-bottom: 8px;
+            border-bottom: 1px solid var(--iks-sand-200);
+            padding-bottom: 4px;
+        }
+
+        .guide-slide ul {
+            padding-left: 18px;
+            margin-top: 6px;
+        }
+
+        .guide-slide li { margin-bottom: 6px; }
+
+        .guide-nav-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .guide-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .guide-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--iks-sand-200);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .guide-dot.active {
+            background: var(--iks-haldi-600);
+            transform: scale(1.2);
+        }
+
+        .btn-nav {
+            min-width: 80px;
+            min-height: 36px;
+            font-size: 13px;
+        }
+
+        .account-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 16px 0;
+            max-height: 220px;
+            overflow-y: auto;
+        }
+
+        .account-card {
+            background: white;
+            border: 2px solid var(--iks-sand-400);
+            border-radius: 12px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .account-card:hover {
+            border-color: var(--iks-haldi-500);
+            background: #fffdf9;
+            transform: translateY(-1px);
+        }
+
+        .account-card.active-acc {
+            border-color: var(--iks-haldi-500);
+            background: var(--iks-sand-100);
+        }
+
+        .acc-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--bt3-frame);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .acc-info {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .acc-name {
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--iks-ink-900);
+        }
+
+        .acc-email {
+            font-size: 12px;
+            color: var(--iks-ink-500);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .add-account-box {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .acc-input {
+            flex: 1;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1.5px solid var(--iks-sand-400);
+            font-family: var(--font-body);
+            font-size: 14px;
+            outline: none;
+        }
+
+        .btn-guest {
+            background: var(--iks-haldi-500);
+            border: 2px solid var(--iks-haldi-600);
+            color: var(--iks-ink-900);
+            font-family: var(--font-body);
+            font-size: 15px;
+            font-weight: 700;
+            padding: 10px 22px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-top: 14px;
+            width: 100%;
+            box-shadow: 0 3px 0 var(--iks-haldi-600);
+        }
+
+        .winner-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin: 12px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: white;
+            border: 3px solid var(--iks-haldi-500);
+            box-shadow: 0 0 15px rgba(232, 163, 23, 0.6);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="app-container">
+
+        <!-- TITLE / MENU SCREEN (SMALL DEFAULT SIZE) -->
+        <div id="screen-menu" class="screen active">
+            <div class="hud-bar">
+                <div class="user-pill" id="hud-user-pill">
+                    <span style="color:var(--iks-haldi-500)">◆</span> Select Account
+                </div>
+                <div class="hud-right-group">
+                    <button class="btn-gold" id="auth-action-btn" onclick="openModal('modal-login')">SWITCH ID</button>
+                    <button class="btn-icon-setting" title="Settings" onclick="openModal('modal-settings')">⚙</button>
+                </div>
+            </div>
+
+            <div class="title-container">
+                <h1 class="game-title">पचीसी</h1>
+                <p class="game-subtitle">PACHISI • REFINED AMBIENCE</p>
+            </div>
+
+            <!-- REFINED COMPACT GAME OPTION BOXES -->
+            <div class="menu-options">
+                <button class="menu-btn" onclick="startBotMatch()">
+                    <div class="menu-btn-icon">🤖</div>
+                    <span class="menu-btn-text">PLAY WITH COMPUTER</span>
+                    <span class="menu-btn-arrow">▶</span>
+                </button>
+                
+                <button class="menu-btn" onclick="openSelectModal('players')">
+                    <div class="menu-btn-icon">👥</div>
+                    <span class="menu-btn-text">PLAY WITH PLAYERS</span>
+                    <span class="menu-btn-arrow">▶</span>
+                </button>
+                
+                <button class="menu-btn" onclick="openRulesModal()">
+                    <div class="menu-btn-icon">📖</div>
+                    <span class="menu-btn-text">GAME RULES & GUIDE</span>
+                    <span class="menu-btn-arrow">▶</span>
+                </button>
+            </div>
+
+            <div style="font-size: 12px; font-family: var(--font-display); color: var(--iks-sand-200); margin-bottom: 8px;">
+                CENTURION UNIVERSITY • IKS GAMES
+            </div>
+        </div>
+
+        <!-- GAMEPLAY SCREEN (LARGE INTERFACE) -->
+        <div id="screen-game" class="screen">
+            <div class="hud-bar">
+                <button class="btn-gold" id="btn-quit-game" style="min-width: 70px; height: 34px;" onclick="triggerQuit()">QUIT</button>
+                <div class="user-pill" style="font-family: var(--font-display);" id="mode-header-label">PACHISI (PCH)</div>
+                <div class="hud-right-group">
+                    <div style="font-size:13px; color:var(--iks-sand-100)">BT-3 THEME</div>
+                    <button class="btn-icon-setting" style="width:34px; height:34px; font-size:16px;" title="Settings" onclick="openModal('modal-settings')">⚙</button>
+                </div>
+            </div>
+
+            <!-- Cruciform Board Container -->
+            <div id="pachisi-board" class="board-container">
+                <!-- Center Finish (Charkoni) -->
+                <div class="center-charkoni">
+                    <div id="nest-p1" class="charkoni-nest" style="background:#e8887d;"></div>
+                    <div id="nest-p3" class="charkoni-nest" style="background:#f7d68d;"></div>
+                    <div id="nest-p2" class="charkoni-nest" style="background:#5bb3be;"></div>
+                    <div id="nest-p4" class="charkoni-nest" style="background:#7b94be;"></div>
+                </div>
+            </div>
+
+            <!-- Footer Controls -->
+            <div class="game-controls">
+                <div class="turn-box">
+                    <span class="turn-label">CURRENT TURN</span>
+                    <div id="turn-display" class="turn-player">
+                        <span style="color:var(--p1-sindoor)">◆</span> P1 Sindoor
+                    </div>
+                </div>
+
+                <!-- Animated Cowries Box -->
+                <div class="cowrie-box" id="cowrie-box-btn" onclick="throwCowries()">
+                    <div class="cowries-container" id="cowries-list">
+                        <div class="cowrie-shell open"></div>
+                        <div class="cowrie-shell open"></div>
+                        <div class="cowrie-shell open"></div>
+                        <div class="cowrie-shell open"></div>
+                        <div class="cowrie-shell open"></div>
+                        <div class="cowrie-shell open"></div>
+                    </div>
+                    <span id="cowrie-val" class="cowrie-val">ROLL</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL: GMAIL SELECTOR -->
+        <div id="modal-login" class="modal-overlay active">
+            <div class="modal-box">
+                <h2 class="modal-title">SELECT GMAIL ID</h2>
+                <p style="font-size:14px; color:var(--iks-ink-700)">
+                    Choose an account to continue or play as a Guest.
+                </p>
+                
+                <div class="account-list" id="account-list-container"></div>
+
+                <div class="add-account-box">
+                    <input type="email" id="new-gmail-input" class="acc-input" placeholder="Enter Gmail (e.g. name@gmail.com)">
+                    <button class="btn-gold" style="min-width:70px; font-size:13px;" onclick="addNewGmail()">ADD</button>
+                </div>
+
+                <div>
+                    <button class="btn-guest" onclick="selectGuest()">Continue as Guest</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL: SETTINGS -->
+        <div id="modal-settings" class="modal-overlay">
+            <div class="modal-box">
+                <button class="modal-close" onclick="closeModal('modal-settings')">✕</button>
+                <h2 class="modal-title">SETTINGS</h2>
+                
+                <div class="setting-item">
+                    <div class="setting-label-row">
+                        <span>Relaxing Ambient Soundscape</span>
+                        <span id="bgm-vol-text">50%</span>
+                    </div>
+                    <input type="range" id="bgm-slider" class="setting-slider" min="0" max="100" value="50" oninput="updateBgmVolume(this.value)">
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-label-row">
+                        <span>Cowrie Rolling & Sound Effects</span>
+                        <span id="sfx-vol-text">80%</span>
+                    </div>
+                    <input type="range" id="sfx-slider" class="setting-slider" min="0" max="100" value="80" oninput="updateSfxVolume(this.value)">
+                </div>
+
+                <button class="btn-gold" style="width:100%; min-height:44px; font-size:16px; margin-top:10px;" onclick="closeModal('modal-settings')">DONE</button>
+            </div>
+        </div>
+
+        <!-- MODAL: MEDIUM INTERFACE GAMEPLAY GUIDE -->
+        <div id="modal-rules" class="modal-overlay">
+            <div class="modal-box">
+                <button class="modal-close" onclick="closeModal('modal-rules')">✕</button>
+                <h2 class="modal-title">GAME PLAY GUIDE</h2>
+                
+                <div class="guide-slider-wrapper">
+                    <div class="guide-slide active" id="guide-slide-1">
+                        <h3>1. Objective & Setup</h3>
+                        <p>Pachisi is a traditional Indian cross-and-circle board game.</p>
+                        <ul>
+                            <li><strong>Objective:</strong> Be the first player to navigate all 4 pawns around the board into the central home nest (<strong>Charkoni</strong>).</li>
+                            <li><strong>Players:</strong> Played with 2, 3, or 4 players (or AI bots).</li>
+                            <li>Each player controls 4 colored pawns originating from their respective arm.</li>
+                        </ul>
+                    </div>
+
+                    <div class="guide-slide" id="guide-slide-2">
+                        <h3>2. Cowrie Shell Scores</h3>
+                        <p>Movement points are determined by casting 6 cowrie shells:</p>
+                        <ul>
+                            <li><strong>2 Open Shells:</strong> Move 2 Steps</li>
+                            <li><strong>3 Open Shells:</strong> Move 3 Steps</li>
+                            <li><strong>4 Open Shells:</strong> Move 4 Steps</li>
+                            <li><strong>0 Open Shells:</strong> Move 6 Steps + Bonus Roll</li>
+                            <li><strong>1 Open Shell:</strong> Move 10 Steps + Bonus Roll</li>
+                            <li><strong>5 Open Shells:</strong> Move 25 Steps + Bonus Roll</li>
+                        </ul>
+                    </div>
+
+                    <div class="guide-slide" id="guide-slide-3">
+                        <h3>3. Pawn Movement & Paths</h3>
+                        <p>Rules for navigating board paths:</p>
+                        <ul>
+                            <li>Pawns travel counter-clockwise around the outer perimeter of the cruciform board.</li>
+                            <li>After completing a circuit, pawns turn upward into their home column.</li>
+                            <li>An exact score is required to land in the central <strong>Charkoni</strong> nest.</li>
+                        </ul>
+                    </div>
+
+                    <div class="guide-slide" id="guide-slide-4">
+                        <h3>4. Safe Castles & Capturing</h3>
+                        <p>Interacting with opponent pawns:</p>
+                        <ul>
+                            <li><strong>Safe Squares:</strong> Cells marked with <strong>✕</strong> are <em>Castles</em>. Pawns here cannot be captured.</li>
+                            <li><strong>Capturing:</strong> Landing on an opponent pawn on a regular cell captures it, sending it back to start!</li>
+                        </ul>
+                    </div>
+
+                    <div class="guide-slide" id="guide-slide-5">
+                        <h3>5. Strategy & Winning</h3>
+                        <p>Mastering the game tactics:</p>
+                        <ul>
+                            <li>Keep pawns grouped on Safe Squares when opponents approach.</li>
+                            <li>Utilize high scores (10 or 25) to move pawns safely into home paths.</li>
+                            <li>First player to place all 4 pawns into the center wins!</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="guide-nav-bar">
+                    <button class="btn-gold btn-nav" id="btn-guide-prev" onclick="changeGuideSlide(-1)">PREV</button>
+                    
+                    <div class="guide-dots" id="guide-dots-container">
+                        <div class="guide-dot active" onclick="goToGuideSlide(1)"></div>
+                        <div class="guide-dot" onclick="goToGuideSlide(2)"></div>
+                        <div class="guide-dot" onclick="goToGuideSlide(3)"></div>
+                        <div class="guide-dot" onclick="goToGuideSlide(4)"></div>
+                        <div class="guide-dot" onclick="goToGuideSlide(5)"></div>
+                    </div>
+
+                    <button class="btn-gold btn-nav" id="btn-guide-next" onclick="changeGuideSlide(1)">NEXT</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL: PLAYER SELECT -->
+        <div id="modal-select" class="modal-overlay">
+            <div class="modal-box">
+                <button class="modal-close" onclick="closeModal('modal-select')">✕</button>
+                <h2 class="modal-title" id="modal-select-title">NUMBER OF PLAYERS</h2>
+                <p style="font-size:15px; margin-bottom:18px; color:var(--iks-ink-700)">
+                    Select how many players will compete in this match.
+                </p>
+                <div style="display:flex; justify-style:space-around; margin-bottom:24px;">
+                    <div id="opt-2p" class="player-count-option" onclick="selectPlayerCount(2)">
+                        <span style="font-size:22px; font-weight:bold; font-family:var(--font-display);">2</span>
+                        <span style="font-size:12px; font-weight:bold;">PLAYERS</span>
+                    </div>
+                    <div id="opt-3p" class="player-count-option selected" onclick="selectPlayerCount(3)">
+                        <span style="font-size:22px; font-weight:bold; font-family:var(--font-display);">3</span>
+                        <span style="font-size:12px; font-weight:bold;">PLAYERS</span>
+                    </div>
+                    <div id="opt-4p" class="player-count-option" onclick="selectPlayerCount(4)">
+                        <span style="font-size:22px; font-weight:bold; font-family:var(--font-display);">4</span>
+                        <span style="font-size:12px; font-weight:bold;">PLAYERS</span>
+                    </div>
+                </div>
+                <button class="btn-gold" style="width:100%; min-height:48px; font-size:18px;" onclick="startGame()">START MATCH</button>
+            </div>
+        </div>
+
+        <!-- MODAL: WINNER CELEBRATION -->
+        <div id="modal-victory" class="modal-overlay">
+            <div class="modal-box">
+                <h2 class="modal-title" style="color:var(--iks-haldi-600);">VICTORY!</h2>
+                <div id="winner-avatar-box" class="winner-avatar">◆</div>
+                <p id="winner-text" style="font-size:20px; font-weight:bold; font-family:var(--font-display); margin-bottom:14px; color:var(--iks-ink-900);">
+                    PLAYER 1 WINS!
+                </p>
+                <p style="font-size:14px; color:var(--iks-ink-700); margin-bottom:20px;">
+                    All 4 pawns have reached the Charkoni nest!
+                </p>
+                <div style="display:flex; gap:12px; justify-content:center;">
+                    <button class="btn-gold" onclick="startGame()">PLAY AGAIN</button>
+                    <button class="btn-gold" style="background:var(--iks-sand-400);" onclick="confirmQuit()">MAIN MENU</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL: QUIT -->
+        <div id="modal-quit" class="modal-overlay">
+            <div class="modal-box">
+                <h2 class="modal-title">LEAVE MATCH?</h2>
+                <p style="font-size:15px; margin-bottom:18px; color:var(--iks-ink-700)">Progress will be lost.</p>
+                <div style="display:flex; gap:14px; justify-content:center;">
+                    <button class="btn-gold" style="background:var(--p1-sindoor); color:white;" onclick="confirmQuit()">QUIT</button>
+                    <button class="btn-gold" onclick="closeModal('modal-quit')">RESUME</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        /* --- AUDIO ENGINE --- */
+        let audioCtx = null;
+        let bgmGainNode = null;
+        let sfxGainNode = null;
+        let bgmVolume = 0.5;
+        let sfxVolume = 0.8;
+        let isAudioInit = false;
+
+        function initAudio() {
+            if (isAudioInit) return;
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContext) return;
+            
+            audioCtx = new AudioContext();
+
+            bgmGainNode = audioCtx.createGain();
+            bgmGainNode.gain.value = bgmVolume;
+            bgmGainNode.connect(audioCtx.destination);
+
+            sfxGainNode = audioCtx.createGain();
+            sfxGainNode.gain.value = sfxVolume;
+            sfxGainNode.connect(audioCtx.destination);
+
+            startRelaxingSoundscape();
+            isAudioInit = true;
+        }
+
+        function updateBgmVolume(val) {
+            bgmVolume = val / 100;
+            document.getElementById('bgm-vol-text').textContent = val + '%';
+            if (bgmGainNode) {
+                bgmGainNode.gain.setValueAtTime(bgmVolume, audioCtx.currentTime);
+            }
+        }
+
+        function updateSfxVolume(val) {
+            sfxVolume = val / 100;
+            document.getElementById('sfx-vol-text').textContent = val + '%';
+            if (sfxGainNode) {
+                sfxGainNode.gain.setValueAtTime(sfxVolume, audioCtx.currentTime);
+            }
+        }
+
+        function playIPhoneTapSound() {
+            if (!audioCtx) initAudio();
+            if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+            if (!audioCtx || sfxVolume === 0) return;
+
+            const now = audioCtx.currentTime;
+            
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(1800, now);
+            osc.frequency.exponentialRampToValueAtTime(120, now + 0.015);
+
+            gain.gain.setValueAtTime(0.6 * sfxVolume, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.018);
+
+            osc.connect(gain);
+            gain.connect(sfxGainNode);
+
+            osc.start(now);
+            osc.stop(now + 0.018);
+        }
+
+        function playWinSound() {
+            if (!audioCtx) initAudio();
+            if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+            if (!audioCtx || sfxVolume === 0) return;
+
+            const now = audioCtx.currentTime;
+            const notes = [523.25, 659.25, 783.99, 1046.50];
+
+            notes.forEach((freq, idx) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(freq, now + (idx * 0.12));
+
+                gain.gain.setValueAtTime(0.4 * sfxVolume, now + (idx * 0.12));
+                gain.gain.exponentialRampToValueAtTime(0.001, now + (idx * 0.12) + 0.4);
+
+                osc.connect(gain);
+                gain.connect(sfxGainNode);
+
+                osc.start(now + (idx * 0.12));
+                osc.stop(now + (idx * 0.12) + 0.4);
+            });
+        }
+
+        function playClickSound() {
+            if (!audioCtx) initAudio();
+            if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+            if (!audioCtx || sfxVolume === 0) return;
+
+            const now = audioCtx.currentTime;
+            
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(750, now);
+            osc.frequency.exponentialRampToValueAtTime(180, now + 0.04);
+
+            gain.gain.setValueAtTime(0.4 * sfxVolume, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+
+            osc.connect(gain);
+            gain.connect(sfxGainNode);
+
+            osc.start(now);
+            osc.stop(now + 0.04);
+        }
+
+        function playQuitSound() {
+            if (!audioCtx) initAudio();
+            if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+            if (!audioCtx || sfxVolume === 0) return;
+
+            const now = audioCtx.currentTime;
+            
+            const osc1 = audioCtx.createOscillator();
+            const gain1 = audioCtx.createGain();
+            osc1.type = 'sawtooth';
+            osc1.frequency.setValueAtTime(440, now);
+            osc1.frequency.exponentialRampToValueAtTime(220, now + 0.15);
+
+            gain1.gain.setValueAtTime(0.3 * sfxVolume, now);
+            gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+
+            osc1.connect(gain1);
+            gain1.connect(sfxGainNode);
+
+            osc1.start(now);
+            osc1.stop(now + 0.15);
+
+            const osc2 = audioCtx.createOscillator();
+            const gain2 = audioCtx.createGain();
+            osc2.type = 'sine';
+            osc2.frequency.setValueAtTime(220, now + 0.1);
+            osc2.frequency.exponentialRampToValueAtTime(110, now + 0.35);
+
+            gain2.gain.setValueAtTime(0.4 * sfxVolume, now + 0.1);
+            gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+
+            osc2.connect(gain2);
+            gain2.connect(sfxGainNode);
+
+            osc2.start(now + 0.1);
+            osc2.stop(now + 0.35);
+        }
+
+        function playRollingSound() {
+            if (!audioCtx) initAudio();
+            if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+            if (!audioCtx || sfxVolume === 0) return;
+
+            const now = audioCtx.currentTime;
+            for (let i = 0; i < 8; i++) {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(180 + Math.random() * 320, now + (i * 0.05));
+                
+                gain.gain.setValueAtTime(0.3, now + (i * 0.05));
+                gain.gain.exponentialRampToValueAtTime(0.01, now + (i * 0.05) + 0.08);
+
+                osc.connect(gain);
+                gain.connect(sfxGainNode);
+
+                osc.start(now + (i * 0.05));
+                osc.stop(now + (i * 0.05) + 0.08);
+            }
+        }
+
+        function startRelaxingSoundscape() {
+            if (!audioCtx) return;
+
+            const freqs = [108.00, 162.00, 216.00, 324.00];
+            freqs.forEach(freq => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.type = 'sine';
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.02, audioCtx.currentTime);
+                
+                osc.connect(gain);
+                gain.connect(bgmGainNode);
+                osc.start();
+            });
+
+            const bufferSize = audioCtx.sampleRate * 2;
+            const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+            const output = noiseBuffer.getChannelData(0);
+            
+            for (let i = 0; i < bufferSize; i++) {
+                output[i] = Math.random() * 2 - 1;
+            }
+
+            const whiteNoise = audioCtx.createBufferSource();
+            whiteNoise.buffer = noiseBuffer;
+            whiteNoise.loop = true;
+
+            const filter = audioCtx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.value = 350;
+
+            const noiseGain = audioCtx.createGain();
+            noiseGain.gain.value = 0.015;
+
+            whiteNoise.connect(filter);
+            filter.connect(noiseGain);
+            noiseGain.connect(bgmGainNode);
+
+            whiteNoise.start();
+        }
+
+        document.addEventListener('click', (e) => {
+            const isPawn = e.target.closest('.pawn');
+            const target = e.target.closest('button, .menu-btn, .btn-gold, .btn-icon-setting, .account-card, .modal-close, .player-count-option, .guide-dot');
+            
+            if (!isPawn && target && target.id !== 'btn-quit-game') {
+                playClickSound();
+            }
+        });
+
+        function triggerQuit() {
+            playQuitSound();
+            openModal('modal-quit');
+        }
+
+        /* SCREEN SIZE CONTROLLER */
+        function setFullscreenLayout(enable) {
+            const app = document.getElementById('app-container');
+            if (enable) {
+                app.classList.add('fullscreen');
+            } else {
+                app.classList.remove('fullscreen');
+            }
+        }
+
+        /* SLIDING GUIDE LOGIC (MEDIUM INTERFACE) */
+        let currentGuideSlide = 1;
+        const totalGuideSlides = 5;
+
+        function openRulesModal() {
+            setFullscreenLayout(false); // Keeps medium container on top of default menu screen
+            currentGuideSlide = 1;
+            updateGuideSlideView();
+            openModal('modal-rules');
+        }
+
+        function changeGuideSlide(direction) {
+            currentGuideSlide += direction;
+            if (currentGuideSlide < 1) currentGuideSlide = 1;
+            if (currentGuideSlide > totalGuideSlides) currentGuideSlide = totalGuideSlides;
+            updateGuideSlideView();
+        }
+
+        function goToGuideSlide(slideNum) {
+            currentGuideSlide = slideNum;
+            updateGuideSlideView();
+        }
+
+        function updateGuideSlideView() {
+            for (let i = 1; i <= totalGuideSlides; i++) {
+                const slide = document.getElementById(`guide-slide-${i}`);
+                if (slide) slide.classList.remove('active');
+            }
+            
+            const activeSlide = document.getElementById(`guide-slide-${currentGuideSlide}`);
+            if (activeSlide) activeSlide.classList.add('active');
+
+            const dots = document.querySelectorAll('.guide-dot');
+            dots.forEach((dot, idx) => {
+                if (idx + 1 === currentGuideSlide) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+
+            const prevBtn = document.getElementById('btn-guide-prev');
+            const nextBtn = document.getElementById('btn-guide-next');
+
+            if (prevBtn) prevBtn.style.visibility = (currentGuideSlide === 1) ? 'hidden' : 'visible';
+            
+            if (nextBtn) {
+                if (currentGuideSlide === totalGuideSlides) {
+                    nextBtn.textContent = 'DONE';
+                    nextBtn.onclick = () => closeModal('modal-rules');
+                } else {
+                    nextBtn.textContent = 'NEXT';
+                    nextBtn.onclick = () => changeGuideSlide(1);
+                }
+            }
+        }
+
+        /* GMAIL SYSTEM */
+        let availableAccounts = [
+            { name: "Centurion Student", email: "240714100085@centurionuniv.edu.in", avatarColor: "#C8402F" },
+            { name: "Rahul Sharma", email: "rahul.pachisi@gmail.com", avatarColor: "#10727F" },
+            { name: "Ananya Roy", email: "ananya.roy@gmail.com", avatarColor: "#E8A317" }
+        ];
+
+        let selectedAccount = null;
+
+        function renderAccountList() {
+            const container = document.getElementById('account-list-container');
+            container.innerHTML = '';
+
+            availableAccounts.forEach((acc) => {
+                const card = document.createElement('div');
+                card.className = `account-card ${selectedAccount && selectedAccount.email === acc.email ? 'active-acc' : ''}`;
+                card.onclick = () => selectAccount(acc);
+
+                const initial = acc.name.charAt(0).toUpperCase();
+
+                card.innerHTML = `
+                    <div class="acc-avatar" style="background-color: ${acc.avatarColor}">${initial}</div>
+                    <div class="acc-info">
+                        <span class="acc-name">${acc.name}</span>
+                        <span class="acc-email">${acc.email}</span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function selectAccount(acc) {
+            initAudio();
+            selectedAccount = acc;
+            players[0].name = acc.name.split(' ')[0];
+
+            const initial = acc.name.charAt(0).toUpperCase();
+            const userPill = document.getElementById('hud-user-pill');
+            userPill.innerHTML = `
+                <div class="user-avatar" style="background-color:${acc.avatarColor}">${initial}</div>
+                <span>${acc.name.split(' ')[0]}</span>
+            `;
+
+            renderAccountList();
+            closeModal('modal-login');
+        }
+
+        function selectGuest() {
+            initAudio();
+            selectedAccount = null;
+            players[0].name = 'Guest_1234';
+            
+            const userPill = document.getElementById('hud-user-pill');
+            userPill.innerHTML = `<span style="color:var(--iks-haldi-500)">◆</span> Guest_1234`;
+
+            renderAccountList();
+            closeModal('modal-login');
+        }
+
+        function addNewGmail() {
+            const input = document.getElementById('new-gmail-input');
+            const email = input.value.trim();
+
+            if (email && email.includes('@')) {
+                const namePart = email.split('@')[0];
+                const formattedName = namePart.charAt(0).toUpperCase() + namePart.slice(1);
+                
+                const newAcc = {
+                    name: formattedName,
+                    email: email,
+                    avatarColor: '#2F4B7C'
+                };
+
+                availableAccounts.push(newAcc);
+                input.value = '';
+                selectAccount(newAcc);
+            }
+        }
+
+        /* GAMEPLAY SYSTEM */
+        const players = [
+            { id: 'p1', name: 'Guest_1234', color: 'var(--p1-sindoor)', badge: '◆', class: 'pawn-p1', startCol: 10, startRow: 19, homeCol: 10, isBot: false },
+            { id: 'p2', name: 'P2 Peacock', color: 'var(--p2-peacock)', badge: '○', class: 'pawn-p2', startCol: 19, startRow: 10, homeCol: 10, isBot: false },
+            { id: 'p3', name: 'P3 Haldi', color: 'var(--p3-haldi)', badge: '▲', class: 'pawn-p3', startCol: 10, startRow: 1, homeCol: 10, isBot: false },
+            { id: 'p4', name: 'P4 Indigo', color: 'var(--p4-indigo)', badge: '■', class: 'pawn-p4', startCol: 1, startRow: 10, homeCol: 10, isBot: false }
+        ];
+
+        const outerTrack = [
+            [10,19], [10,18], [10,17], [10,16], [10,15], [10,14], [10,13], [10,12],
+            [12,10], [13,10], [14,10], [15,10], [16,10], [17,10], [18,10], [19,10],
+            [19,9], [18,9], [17,9], [16,9], [15,9], [14,9], [13,9], [12,9],
+            [10,8], [10,7], [10,6], [10,5], [10,4], [10,3], [10,2], [10,1],
+            [9,1], [9,2], [9,3], [9,4], [9,5], [9,6], [9,7], [9,8],
+            [8,9], [7,9], [6,9], [5,9], [4,9], [3,9], [2,9], [1,9],
+            [1,10], [2,10], [3,10], [4,10]
+        ];
+
+        const homePaths = {
+            'p1': [[10,18], [10,17], [10,16], [10,15], [10,14], [10,13], [10,12]],
+            'p2': [[18,10], [17,10], [16,10], [15,10], [14,10], [13,10], [12,10]],
+            'p3': [[10,2], [10,3], [10,4], [10,5], [10,6], [10,7], [10,8]],
+            'p4': [[2,10], [3,10], [4,10], [5,10], [6,10], [7,10], [8,10]]
+        };
+
+        const castleCells = [
+            "10,3", "17,10", "10,17", "3,10", 
+            "11,7", "13,11", "9,13", "7,9"   
+        ];
+
+        let activePlayerCount = 2;
+        let currentPlayerIdx = 0;
+        let currentGameMode = 'players';
+        let isRolling = false;
+        let currentRoll = null;
+        let hasBonusRoll = false;
+        let pawnsState = [];
+
+        function openModal(id) {
+            initAudio();
+            document.getElementById(id).classList.add('active');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        function openSelectModal(mode) {
+            currentGameMode = mode;
+            document.getElementById('modal-select-title').textContent = 'PLAY WITH PLAYERS';
+            openModal('modal-select');
+        }
+
+        function startBotMatch() {
+            currentGameMode = 'bot';
+            activePlayerCount = 2;
+            startGame();
+        }
+
+        function selectPlayerCount(count) {
+            activePlayerCount = count;
+            document.querySelectorAll('.player-count-option').forEach(opt => opt.classList.remove('selected'));
+            document.getElementById(`opt-${count}p`).classList.add('selected');
+        }
+
+        function startGame() {
+            setFullscreenLayout(true); // Expands to Large Fullscreen Interface
+            closeModal('modal-select');
+            closeModal('modal-victory');
+            currentPlayerIdx = 0;
+            currentRoll = null;
+            hasBonusRoll = false;
+            
+            players.forEach((p, idx) => {
+                p.isBot = (currentGameMode === 'bot' && idx > 0);
+            });
+
+            document.getElementById('mode-header-label').textContent = currentGameMode === 'bot' ? 'VS COMPUTER' : 'MULTIPLAYER';
+
+            updateTurnHUD();
+            document.getElementById('screen-menu').classList.remove('active');
+            document.getElementById('screen-game').classList.add('active');
+            initPawns();
+        }
+
+        function confirmQuit() {
+            setFullscreenLayout(false); // Returns to Menu Layout
+            closeModal('modal-quit');
+            closeModal('modal-victory');
+            document.getElementById('screen-game').classList.remove('active');
+            document.getElementById('screen-menu').classList.add('active');
+        }
+
+        function updateTurnHUD() {
+            const curP = players[currentPlayerIdx];
+            const turnDisplay = document.getElementById('turn-display');
+            const botTag = curP.isBot ? ' (BOT)' : '';
+            turnDisplay.innerHTML = `<span style="color:${curP.color}">${curP.badge}</span> ${curP.name}${botTag}`;
+
+            if (curP.isBot) {
+                setTimeout(handleBotTurn, 800);
+            }
+        }
+
+        /* BUILD BOARD */
+        const board = document.getElementById('pachisi-board');
+
+        function isCruciformCell(r, c) {
+            if (r >= 9 && r <= 11 && c >= 9 && c <= 11) return false;
+            if (r >= 1 && r <= 8 && c >= 9 && c <= 11) return true;
+            if (r >= 12 && r <= 19 && c >= 9 && c <= 11) return true;
+            if (r >= 9 && r <= 11 && c >= 1 && c <= 8) return true;
+            if (r >= 9 && r <= 11 && c >= 12 && c <= 19) return true;
+            return false;
+        }
+
+        for (let r = 1; r <= 19; r++) {
+            for (let c = 1; c <= 19; c++) {
+                if (!isCruciformCell(r, c)) continue;
+
+                const cell = document.createElement('div');
+                cell.className = 'c-cell';
+                cell.id = `cell-${c}-${r}`;
+                cell.style.gridRow = r;
+                cell.style.gridColumn = c;
+
+                if ((r + c) % 2 === 1) cell.classList.add('dark');
+
+                if (c === 10 && r >= 2 && r <= 8) cell.classList.add('p3-home'); 
+                if (r === 10 && c >= 12 && c <= 18) cell.classList.add('p2-home'); 
+                if (c === 10 && r >= 12 && r <= 18) cell.classList.add('p1-home'); 
+                if (r === 10 && c >= 2 && c <= 8) cell.classList.add('p4-home'); 
+
+                if (castleCells.includes(`${c},${r}`)) {
+                    cell.classList.add('castle');
+                }
+
+                board.appendChild(cell);
+            }
+        }
+
+        function initPawns() {
+            pawnsState = [];
+            document.querySelectorAll('.pawn').forEach(p => p.remove());
+
+            const startOffsets = [0, 13, 26, 39];
+
+            for (let pIdx = 0; pIdx < activePlayerCount; pIdx++) {
+                const p = players[pIdx];
+                for (let i = 0; i < 4; i++) {
+                    const pawnObj = {
+                        id: `${p.id}-${i}`,
+                        player: p.id,
+                        badge: p.badge,
+                        class: p.class,
+                        pawnIdx: i,
+                        step: -1,
+                        startOffset: startOffsets[pIdx]
+                    };
+                    pawnsState.push(pawnObj);
+
+                    const pawnElem = document.createElement('div');
+                    pawnElem.className = `pawn ${p.class}`;
+                    pawnElem.id = pawnObj.id;
+                    pawnElem.innerHTML = `<span class="pawn-badge">${p.badge}</span>`;
+                    pawnElem.onclick = () => onPawnClick(pawnObj);
+
+                    const startNest = document.getElementById(`nest-${p.id}`);
+                    if (startNest) startNest.appendChild(pawnElem);
+                }
+            }
+        }
+
+        function clearHighlights() {
+            document.querySelectorAll('.pawn').forEach(p => p.classList.remove('selectable'));
+        }
+
+        function checkWinCondition(playerId) {
+            const playerPawns = pawnsState.filter(p => p.player === playerId);
+            const homePawns = playerPawns.filter(p => p.step >= 58);
+
+            if (homePawns.length === 4) {
+                const winner = players.find(p => p.id === playerId);
+                playWinSound();
+
+                const winnerAvatar = document.getElementById('winner-avatar-box');
+                winnerAvatar.style.backgroundColor = winner.color;
+                winnerAvatar.textContent = winner.badge;
+
+                document.getElementById('winner-text').textContent = `${winner.name.toUpperCase()} WINS!`;
+                openModal('modal-victory');
+                return true;
+            }
+            return false;
+        }
+
+        function getPawnCellCoords(pawn) {
+            if (pawn.step === -1) return null;
+            if (pawn.step >= 58) return null;
+
+            if (pawn.step < 51) {
+                const index = (pawn.startOffset + pawn.step) % 52;
+                return outerTrack[index];
+            } else {
+                const homeStep = pawn.step - 51;
+                const path = homePaths[pawn.player];
+                return path[homeStep];
+            }
+        }
+
+        function getValidMovesForPlayer(playerId, rollVal) {
+            const playerPawns = pawnsState.filter(p => p.player === playerId);
+            const validMoves = [];
+
+            playerPawns.forEach(pawn => {
+                if (pawn.step === -1) {
+                    if (rollVal === 6 || rollVal === 10 || rollVal === 25) {
+                        validMoves.push({ pawn, nextStep: 0 });
+                    }
+                } else if (pawn.step + rollVal <= 58) {
+                    validMoves.push({ pawn, nextStep: pawn.step + rollVal });
+                }
+            });
+
+            return validMoves;
+        }
+
+        function onPawnClick(pawnObj) {
+            if (!currentRoll || pawnObj.player !== players[currentPlayerIdx].id) return;
+
+            const validMoves = getValidMovesForPlayer(pawnObj.player, currentRoll);
+            const targetMove = validMoves.find(m => m.pawn.id === pawnObj.id);
+
+            if (!targetMove) return;
+
+            playIPhoneTapSound();
+
+            pawnObj.step = targetMove.nextStep;
+            const pawnElem = document.getElementById(pawnObj.id);
+
+            if (pawnObj.step === 58) {
+                const nest = document.getElementById(`nest-${pawnObj.player}`);
+                if (nest) nest.appendChild(pawnElem);
+            } else {
+                const coords = getPawnCellCoords(pawnObj);
+                const targetCell = document.getElementById(`cell-${coords[0]}-${coords[1]}`);
+                
+                if (targetCell) {
+                    const isCastle = castleCells.includes(`${coords[0]},${coords[1]}`);
+                    if (!isCastle && pawnObj.step < 51) {
+                        const opponents = pawnsState.filter(p => {
+                            if (p.player === pawnObj.player || p.step < 0 || p.step >= 51) return false;
+                            const pCoords = getPawnCellCoords(p);
+                            return pCoords && pCoords[0] === coords[0] && pCoords[1] === coords[1];
+                        });
+
+                        opponents.forEach(captured => {
+                            captured.step = -1;
+                            const capturedElem = document.getElementById(captured.id);
+                            const homeNest = document.getElementById(`nest-${captured.player}`);
+                            if (homeNest && capturedElem) homeNest.appendChild(capturedElem);
+                        });
+                    }
+
+                    targetCell.appendChild(pawnElem);
+                }
+            }
+
+            clearHighlights();
+
+            const curPlayerInfo = players[currentPlayerIdx];
+            const earnedExtraTurn = hasBonusRoll;
+            
+            currentRoll = null;
+            hasBonusRoll = false;
+            document.getElementById('cowrie-val').textContent = 'ROLL';
+
+            if (!checkWinCondition(curPlayerInfo.id)) {
+                if (!earnedExtraTurn) {
+                    currentPlayerIdx = (currentPlayerIdx + 1) % activePlayerCount;
+                }
+                updateTurnHUD();
+            }
+        }
+
+        function throwCowries() {
+            if (isRolling || currentRoll !== null) return;
+
+            playRollingSound();
+            isRolling = true;
+
+            const cowrieBox = document.getElementById('cowrie-val');
+            const shells = document.querySelectorAll('.cowrie-shell');
+            
+            shells.forEach((shell, idx) => {
+                shell.classList.remove('rolling');
+                void shell.offsetWidth;
+                setTimeout(() => {
+                    shell.classList.add('rolling');
+                }, idx * 30);
+            });
+
+            const scoreMap = [
+                { score: 2, openCount: 2, bonus: false },
+                { score: 3, openCount: 3, bonus: false },
+                { score: 4, openCount: 4, bonus: false },
+                { score: 6, openCount: 0, bonus: true },  
+                { score: 10, openCount: 1, bonus: true }, 
+                { score: 25, openCount: 5, bonus: true }  
+            ];
+
+            const outcome = scoreMap[Math.floor(Math.random() * scoreMap.length)];
+
+            setTimeout(() => {
+                const statuses = Array(6).fill('closed');
+                let placed = 0;
+                while (placed < outcome.openCount) {
+                    let randIdx = Math.floor(Math.random() * 6);
+                    if (statuses[randIdx] === 'closed') {
+                        statuses[randIdx] = 'open';
+                        placed++;
+                    }
+                }
+
+                shells.forEach((shell, idx) => {
+                    shell.className = `cowrie-shell ${statuses[idx]}`;
+                });
+
+                currentRoll = outcome.score;
+                hasBonusRoll = outcome.bonus;
+                cowrieBox.textContent = currentRoll;
+
+                const curPlayer = players[currentPlayerIdx];
+                const validMoves = getValidMovesForPlayer(curPlayer.id, currentRoll);
+
+                if (validMoves.length === 0) {
+                    setTimeout(() => {
+                        currentRoll = null;
+                        hasBonusRoll = false;
+                        document.getElementById('cowrie-val').textContent = 'ROLL';
+                        isRolling = false;
+                        currentPlayerIdx = (currentPlayerIdx + 1) % activePlayerCount;
+                        updateTurnHUD();
+                    }, 1000);
+                } else {
+                    if (!curPlayer.isBot) {
+                        validMoves.forEach(m => {
+                            const elem = document.getElementById(m.pawn.id);
+                            if (elem) elem.classList.add('selectable');
+                        });
+                    }
+                    isRolling = false;
+
+                    if (curPlayer.isBot) {
+                        setTimeout(() => executeBotMove(validMoves), 700);
+                    }
+                }
+            }, 400);
+        }
+
+        function handleBotTurn() {
+            if (players[currentPlayerIdx].isBot) {
+                throwCowries();
+            }
+        }
+
+        function executeBotMove(validMoves) {
+            if (!validMoves || validMoves.length === 0) return;
+            const chosenMove = validMoves[Math.floor(Math.random() * validMoves.length)];
+            onPawnClick(chosenMove.pawn);
+        }
+
+        renderAccountList();
+        initPawns();
+    </script>
+</body>
+</html>

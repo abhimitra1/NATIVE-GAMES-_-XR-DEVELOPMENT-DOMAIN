@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#1a0b0e">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="manifest.json">
+    <title>Chauka Bara — Ancient Heritage Cowrie Race Game</title>
+    <link rel="stylesheet" href="style.css?v=90002">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Marcellus&family=Outfit:wght@400;500;600;700;800;900&family=Yatra+One&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+
+        <!-- ==================== PAGE 1: LANDING INTERFACE ==================== -->
+        <div id="landing-page" class="page-view active-view">
+            <header class="landing-header">
+                <!-- Language Selector Bar in Main Menu -->
+                <div class="lang-selector-bar">
+                    <span class="lang-bar-label" id="lbl-select-lang">🌐 Language:</span>
+                    <div class="lang-buttons">
+                        <button class="lang-btn active" data-lang="en">🇬🇧 English</button>
+                        <button class="lang-btn" data-lang="hi">🇮🇳 हिंदी</button>
+                        <button class="lang-btn" data-lang="te_ap">🏛️ తెలుగు (AP)</button>
+                        <button class="lang-btn" data-lang="te_ts">🏰 తెలుగు (TS)</button>
+                        <button class="lang-btn" data-lang="kn">🐘 ಕನ್ನಡ (KA)</button>
+                        <button class="lang-btn" data-lang="or">🇮🇳 ଓଡ଼ିଆ</button>
+                    </div>
+                </div>
+                <h1 class="main-title" id="txt-main-title">CHAUKA BARA</h1>
+                <p class="main-tagline" id="txt-main-tagline">Chowka Bhara — The Traditional Cowrie Race of Destiny</p>
+            </header>
+
+            <div class="landing-content">
+                <!-- Interactive About the Game Card -->
+                <div class="glass-card about-card">
+                    <h2>📜 ABOUT THE GAME</h2>
+
+                    <!-- Interactive Tab Navigation -->
+                    <div class="about-tabs-nav">
+                        <button class="about-tab-btn active" data-about-tab="about-origin">🏛️ Origin</button>
+                        <button class="about-tab-btn" data-about-tab="about-cowrie">🐚 Cowries</button>
+                        <button class="about-tab-btn" data-about-tab="about-rules">🛡️ Safe & Capture</button>
+                        <button class="about-tab-btn" data-about-tab="about-goal">🏆 Goal</button>
+                    </div>
+
+                    <!-- Tab 1: Story & Origin -->
+                    <div id="about-origin" class="about-tab-panel active">
+                        <p>
+                            <strong>Chauka Bara</strong> (also known as <em>Chowka Bhara</em>, <em>Ashta Chamma</em>, or
+                            <em>Kavade Kali</em>) is one of India's oldest strategic race games, played on a sacred
+                            square grid with natural cowrie shells as dice.
+                        </p>
+                        <div class="about-highlight-box">
+                            <span class="highlight-title">✨ ANCIENT HERITAGE</span>
+                            <p>Played for centuries across Indian households, combining tactical movement, blocking,
+                                risk management, and cowrie probability!</p>
+                        </div>
+                    </div>
+
+                    <!-- Tab 2: Cowrie Dice Scores -->
+                    <div id="about-cowrie" class="about-tab-panel">
+                        <p>Four natural cowrie shells are thrown on the square tray. Count the <strong>Mouth-Up</strong>
+                            shells:</p>
+                        <div class="about-cowrie-grid">
+                            <div class="cowrie-score-pill">
+                                <span class="c-val">4 Up = 4 Steps</span>
+                                <span class="c-bonus">✨ Bonus Roll</span>
+                            </div>
+                            <div class="cowrie-score-pill">
+                                <span class="c-val">0 Up = 8 Steps</span>
+                                <span class="c-bonus">✨ Bonus Roll</span>
+                            </div>
+                            <div class="cowrie-score-pill">
+                                <span class="c-val">1 Up = 1 Step</span>
+                            </div>
+                            <div class="cowrie-score-pill">
+                                <span class="c-val">2 Up = 2 Steps</span>
+                            </div>
+                            <div class="cowrie-score-pill">
+                                <span class="c-val">3 Up = 3 Steps</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 3: Safe Squares & Captures -->
+                    <div id="about-rules" class="about-tab-panel">
+                        <div class="about-rule-item">
+                            <span class="rule-icon">🛡️</span>
+                            <div>
+                                <strong>Safe Cross Squares (X):</strong>
+                                <p>Squares with cross hatchings are sanctuaries. Multiple pawns from any player can
+                                    share safe squares without risk.</p>
+                            </div>
+                        </div>
+                        <div class="about-rule-item">
+                            <span class="rule-icon">💥</span>
+                            <div>
+                                <strong>Capturing Pawns:</strong>
+                                <p>Landing on an unprotected opponent pawn captures it, sending it back to start and
+                                    earning a <strong>Bonus Roll</strong>!</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 4: Winning Objective -->
+                    <div id="about-goal" class="about-tab-panel">
+                        <p>Tokens race counter-clockwise around outer rings before turning inward to the central
+                            <strong>HOME</strong> house.
+                        </p>
+                        <div class="about-goal-banner">
+                            <span>🏆 First player to get all 4 pawns inside HOME wins!</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Match Setup Card -->
+                <div class="glass-card setup-main-card">
+                    <h2>🎮 SETUP YOUR MATCH</h2>
+
+                    <!-- Game Mode Selection -->
+                    <div class="setup-group">
+                        <label class="group-label">SELECT GAME MODE</label>
+                        <div class="mode-grid">
+                            <button class="mode-btn active" data-mode="vs_ai">
+                                <span class="mode-icon">🤖</span>
+                                <span class="mode-name">Vs AI</span>
+                                <span class="mode-desc">1 Player vs Computer</span>
+                            </button>
+                            <button class="mode-btn" data-mode="pass_play_2">
+                                <span class="mode-icon">👥</span>
+                                <span class="mode-name">2 Players</span>
+                                <span class="mode-desc">Local Pass & Play</span>
+                            </button>
+                            <button class="mode-btn" data-mode="pass_play_4">
+                                <span class="mode-icon">👨‍👩‍👧‍👦</span>
+                                <span class="mode-name">4 Players</span>
+                                <span class="mode-desc">4-Way Free For All</span>
+                            </button>
+                            <button class="mode-btn" data-mode="partnership_2v2">
+                                <span class="mode-icon">⚔️</span>
+                                <span class="mode-name">2v2 Team</span>
+                                <span class="mode-desc">Partnership Match</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Grid Variant Selection -->
+                    <div class="setup-group">
+                        <label class="group-label">SELECT BOARD GRID</label>
+                        <div class="variant-selector">
+                            <button class="variant-btn active" data-grid="5">
+                                <span class="v-title">5×5 Grid (Primary)</span>
+                                <span class="v-sub">25 Squares • Fast Track</span>
+                            </button>
+                            <button class="variant-btn" data-grid="7">
+                                <span class="v-title">7×7 Grid</span>
+                                <span class="v-sub">49 Squares • Extended Track</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- AI Difficulty -->
+                    <div class="setup-group" id="ai-diff-container">
+                        <label class="group-label">AI DIFFICULTY</label>
+                        <div class="diff-selector">
+                            <button class="diff-btn" data-diff="easy">Easy</button>
+                            <button class="diff-btn active" data-diff="medium">Medium</button>
+                            <button class="diff-btn" data-diff="hard">Hard</button>
+                        </div>
+                    </div>
+
+                    <!-- Pawn Color Customization (Supports 2 and 4 Player Modes) -->
+                    <div class="setup-group">
+                        <label class="group-label">CHOOSE PAWN COLORS</label>
+                        <div class="color-picker-grid">
+                            <div class="player-color-pick" data-player-row="0">
+                                <span>Player 1 (Bottom):</span>
+                                <div class="color-swatches" data-player="0">
+                                    <div class="swatch blue active" data-color="blue"></div>
+                                    <div class="swatch red" data-color="red"></div>
+                                    <div class="swatch green" data-color="green"></div>
+                                    <div class="swatch yellow" data-color="yellow"></div>
+                                </div>
+                            </div>
+                            <div class="player-color-pick" data-player-row="1" style="display: none;">
+                                <span>Player 2 (Left):</span>
+                                <div class="color-swatches" data-player="1">
+                                    <div class="swatch green active" data-color="green"></div>
+                                    <div class="swatch red" data-color="red"></div>
+                                    <div class="swatch blue" data-color="blue"></div>
+                                    <div class="swatch yellow" data-color="yellow"></div>
+                                </div>
+                            </div>
+                            <div class="player-color-pick" data-player-row="2">
+                                <span>Player 3 (Top):</span>
+                                <div class="color-swatches" data-player="2">
+                                    <div class="swatch red active" data-color="red"></div>
+                                    <div class="swatch blue" data-color="blue"></div>
+                                    <div class="swatch green" data-color="green"></div>
+                                    <div class="swatch yellow" data-color="yellow"></div>
+                                </div>
+                            </div>
+                            <div class="player-color-pick" data-player-row="3" style="display: none;">
+                                <span>Player 4 (Right):</span>
+                                <div class="color-swatches" data-player="3">
+                                    <div class="swatch yellow active" data-color="yellow"></div>
+                                    <div class="swatch blue" data-color="blue"></div>
+                                    <div class="swatch red" data-color="red"></div>
+                                    <div class="swatch green" data-color="green"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Center-Aligned Begin Game Action -->
+                    <div class="begin-btn-container">
+                        <button id="btn-begin-game" class="primary-btn begin-btn pulse-btn">
+                            <svg class="theme-icon-svg cowrie-icon-svg" viewBox="0 0 24 24" width="22" height="22" style="margin-right: 8px;">
+                                <defs>
+                                    <linearGradient id="beginGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#ffffff" />
+                                        <stop offset="50%" stop-color="#ffd700" />
+                                        <stop offset="100%" stop-color="#996515" />
+                                    </linearGradient>
+                                </defs>
+                                <path d="M12 2.5C7.5 2.5 3.8 6.5 3.8 12c0 5 3.7 9.5 8.2 9.5s8.2-4.5 8.2-9.5c0-5.5-3.7-9.5-8.2-9.5z" fill="url(#beginGoldGrad)" stroke="#5c4010" stroke-width="0.8" />
+                                <path d="M12 5.5c-1.3 2-1.9 4.2-1.9 6.5s0.6 4.5 1.9 6.5c1.3-2 1.9-4.2 1.9-6.5s-0.6-4.5-1.9-6.5z" fill="#200d05" />
+                            </svg>
+                            <span>BEGIN GAME</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ==================== PAGE 2: GAME BOARD INTERFACE ==================== -->
+        <div id="game-page" class="page-view">
+            <!-- Header -->
+            <header class="app-header">
+                <div class="header-left">
+                    <button id="btn-back-menu" class="secondary-btn home-btn">
+                        <svg class="theme-icon-svg menu-icon-svg" viewBox="0 0 24 24" width="18" height="18" style="margin-right: 6px;">
+                            <defs>
+                                <linearGradient id="menuGoldGrad1" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" stop-color="#fff0a0" />
+                                    <stop offset="50%" stop-color="#ffd700" />
+                                    <stop offset="100%" stop-color="#b8860b" />
+                                </linearGradient>
+                            </defs>
+                            <path d="M12 2.5L2 9.5h2.5V20a1 1 0 001 1h13a1 1 0 001-1V9.5H22L12 2.5zm0 3.8l5 3.7V19H7V10l5-3.7zM10.5 14h3v5h-3v-5z" fill="url(#menuGoldGrad1)" />
+                            <circle cx="12" cy="7.2" r="1.1" fill="url(#menuGoldGrad1)" />
+                        </svg>
+                        <span>MAIN MENU</span>
+                    </button>
+                </div>
+                <div class="logo-area center-title">
+                    <h1>CHAUKA BARA</h1>
+                    <span id="header-mode-badge" class="header-badge">5×5 CLASSIC GRID</span>
+                </div>
+                <div class="header-actions">
+                    <button id="btn-pause" class="icon-btn theme-pause-btn" title="Pause Game">
+                        <svg class="pause-icon-svg" viewBox="0 0 24 24" width="18" height="18">
+                            <defs>
+                                <linearGradient id="pauseGoldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" stop-color="#fff0a0" />
+                                    <stop offset="50%" stop-color="#ffd700" />
+                                    <stop offset="100%" stop-color="#b8860b" />
+                                </linearGradient>
+                            </defs>
+                            <rect x="5" y="3.5" width="4.5" height="17" rx="1.5" fill="url(#pauseGoldGrad)" />
+                            <rect x="14.5" y="3.5" width="4.5" height="17" rx="1.5" fill="url(#pauseGoldGrad)" />
+                        </svg>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Main Game Layout -->
+            <main class="game-layout">
+                <!-- Left Panel: Square Cowrie Throw Box & Roll Number -->
+                <aside class="side-panel left-panel">
+                    <div class="glass-card dice-card square-dice-panel">
+                        <h3>
+                            <svg class="theme-icon-svg cowrie-icon-svg" viewBox="0 0 24 24" width="20" height="20" style="margin-right: 6px;">
+                                <defs>
+                                    <linearGradient id="trayGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#fff5ca" />
+                                        <stop offset="45%" stop-color="#ffd700" />
+                                        <stop offset="100%" stop-color="#b8860b" />
+                                    </linearGradient>
+                                </defs>
+                                <path d="M12 2.5C7.5 2.5 3.8 6.5 3.8 12c0 5 3.7 9.5 8.2 9.5s8.2-4.5 8.2-9.5c0-5.5-3.7-9.5-8.2-9.5z" fill="url(#trayGoldGrad)" stroke="#5c4010" stroke-width="0.8" />
+                                <path d="M12 5.5c-1.3 2-1.9 4.2-1.9 6.5s0.6 4.5 1.9 6.5c1.3-2 1.9-4.2 1.9-6.5s-0.6-4.5-1.9-6.5z" fill="#200d05" />
+                                <line x1="9" y1="9.5" x2="11.2" y2="9.5" stroke="url(#trayGoldGrad)" stroke-width="1.1" stroke-linecap="round" />
+                                <line x1="8.8" y1="12" x2="11.2" y2="12" stroke="url(#trayGoldGrad)" stroke-width="1.1" stroke-linecap="round" />
+                                <line x1="9" y1="14.5" x2="11.2" y2="14.5" stroke="url(#trayGoldGrad)" stroke-width="1.1" stroke-linecap="round" />
+                                <line x1="12.8" y1="9.5" x2="15" y2="9.5" stroke="url(#trayGoldGrad)" stroke-width="1.1" stroke-linecap="round" />
+                                <line x1="12.8" y1="12" x2="15.2" y2="12" stroke="url(#trayGoldGrad)" stroke-width="1.1" stroke-linecap="round" />
+                                <line x1="12.8" y1="14.5" x2="15" y2="14.5" stroke="url(#trayGoldGrad)" stroke-width="1.1" stroke-linecap="round" />
+                            </svg>
+                            <span>COWRIE THROW TRAY</span>
+                        </h3>
+                        <div class="cowrie-container square-tray" id="cowrie-box">
+                            <div class="cowrie-shell" id="shell-1"></div>
+                            <div class="cowrie-shell" id="shell-2"></div>
+                            <div class="cowrie-shell" id="shell-3"></div>
+                            <div class="cowrie-shell" id="shell-4"></div>
+                        </div>
+                        <div class="roll-result" id="roll-result-display">
+                            <span class="roll-value">-</span>
+                            <span class="roll-label">Roll Result Steps</span>
+                        </div>
+                        <button id="btn-roll" class="primary-btn pulse-btn">
+                            <svg class="theme-icon-svg cowrie-icon-svg" viewBox="0 0 24 24" width="20" height="20" style="margin-right: 6px;">
+                                <defs>
+                                    <linearGradient id="btnRollShellGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#fff5ca" />
+                                        <stop offset="50%" stop-color="#ffd700" />
+                                        <stop offset="100%" stop-color="#b8860b" />
+                                    </linearGradient>
+                                </defs>
+                                <path d="M12 2.5C7.5 2.5 3.8 6.5 3.8 12c0 5 3.7 9.5 8.2 9.5s8.2-4.5 8.2-9.5c0-5.5-3.7-9.5-8.2-9.5z" fill="url(#btnRollShellGrad)" stroke="#5c4010" stroke-width="0.8" />
+                                <path d="M12 5.5c-1.3 2-1.9 4.2-1.9 6.5s0.6 4.5 1.9 6.5c1.3-2 1.9-4.2 1.9-6.5s-0.6-4.5-1.9-6.5z" fill="#200d05" />
+                                <line x1="9" y1="9.5" x2="11.2" y2="9.5" stroke="url(#btnRollShellGrad)" stroke-width="1.1" stroke-linecap="round" />
+                                <line x1="8.8" y1="12" x2="11.2" y2="12" stroke="url(#btnRollShellGrad)" stroke-width="1.1" stroke-linecap="round" />
+                                <line x1="9" y1="14.5" x2="11.2" y2="14.5" stroke="url(#btnRollShellGrad)" stroke-width="1.1" stroke-linecap="round" />
+                                <line x1="12.8" y1="9.5" x2="15" y2="9.5" stroke="url(#btnRollShellGrad)" stroke-width="1.1" stroke-linecap="round" />
+                                <line x1="12.8" y1="12" x2="15.2" y2="12" stroke="url(#btnRollShellGrad)" stroke-width="1.1" stroke-linecap="round" />
+                                <line x1="12.8" y1="14.5" x2="15" y2="14.5" stroke="url(#btnRollShellGrad)" stroke-width="1.1" stroke-linecap="round" />
+                            </svg>
+                            <span>THROW COWRIES</span>
+                        </button>
+                    </div>
+                </aside>
+
+                <!-- Center: Board Canvas (Selected Grid, Larger, No Toggle Screen!) -->
+                <section class="board-container">
+                    <div class="wood-frame">
+                        <!-- Antique Brass Filigree Corner Ornaments -->
+                        <div class="brass-corner top-left"></div>
+                        <div class="brass-corner top-right"></div>
+                        <div class="brass-corner bottom-left"></div>
+                        <div class="brass-corner bottom-right"></div>
+                        <div id="board" class="board-grid board-5x5">
+                            <!-- Cells dynamically rendered -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Right Panel: Current Turn & Move Log -->
+                <aside class="side-panel right-panel">
+                    <div class="glass-card turn-card">
+                        <h3>CURRENT TURN</h3>
+                        <div id="active-player-display" class="player-badge p0-badge">
+                            <span class="avatar-dot"></span>
+                            <span id="active-player-name">Player 1</span>
+                        </div>
+                        <div id="turn-status-msg" class="status-msg">Roll the Cowrie Shells</div>
+                    </div>
+
+                    <div class="glass-card log-card">
+                        <h3>MOVE LOG</h3>
+                        <div id="move-log" class="log-content">
+                            <p class="log-entry system">Match Started! All pawns placed in starting home houses.</p>
+                        </div>
+                    </div>
+                </aside>
+            </main>
+
+            <!-- Floating Action Button for How to Play at Bottom Right -->
+            <button id="btn-rules-fab" class="fab-rules-btn" title="How to Play Game">
+                📜
+            </button>
+        </div>
+
+        <!-- Interactive Visual Rules Modal for Newcomers -->
+        <div id="modal-rules" class="modal">
+            <div class="modal-content glass-card rules-modal-box">
+                <span class="close-btn" id="close-rules">&times;</span>
+                <div class="rules-modal-header">
+                    <h2>📖 BEGINNER'S GUIDE TO CHAUKA BARA</h2>
+                    <p class="rules-subtext">Learn the ancient heritage cowrie race in simple visual steps!</p>
+                </div>
+
+                <!-- Tab Navigation -->
+                <div class="rules-tabs">
+                    <button class="rules-tab-btn active" data-tab="tab-objective">🎯 Objective</button>
+                    <button class="rules-tab-btn" data-tab="tab-scores">🐚 Cowrie Scores</button>
+                    <button class="rules-tab-btn" data-tab="tab-safes">🛡️ Safe & Capture</button>
+                    <button class="rules-tab-btn" data-tab="tab-tips">💡 Beginner Tips</button>
+                </div>
+
+                <!-- Tab 1: Objective & Track Flow -->
+                <div id="tab-objective" class="rules-tab-panel active">
+                    <div class="visual-card">
+                        <div class="visual-badge">SPIRAL RACE TO HOME</div>
+                        <p>Guide all <strong>4 pawns</strong> from your starting outer house, moving counter-clockwise
+                            around the board, then spiraling inward into the <strong>Central Home (🏰)</strong>!</p>
+
+                        <div class="track-flow-box">
+                            <div class="flow-step">
+                                <span class="step-num">1</span>
+                                <span>Start House</span>
+                            </div>
+                            <span class="flow-arrow">➔</span>
+                            <div class="flow-step">
+                                <span class="step-num">2</span>
+                                <span>Outer Ring</span>
+                            </div>
+                            <span class="flow-arrow">➔</span>
+                            <div class="flow-step">
+                                <span class="step-num">3</span>
+                                <span>Inner Ring</span>
+                            </div>
+                            <span class="flow-arrow">➔</span>
+                            <div class="flow-step home">
+                                <span class="step-num">4</span>
+                                <span>Central Home 🏰</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 2: Cowrie Shell Scores -->
+                <div id="tab-scores" class="rules-tab-panel">
+                    <div class="cowrie-matrix">
+                        <div class="score-card-row bonus">
+                            <div class="shell-combo">
+                                <span class="mini-shell down"></span>
+                                <span class="mini-shell down"></span>
+                                <span class="mini-shell down"></span>
+                                <span class="mini-shell down"></span>
+                            </div>
+                            <div class="score-info">
+                                <span class="score-num">8 STEPS</span>
+                                <span class="score-desc">0 Mouth-Up (All Flat) • <strong class="gold-txt">+ BONUS
+                                        THROW!</strong></span>
+                            </div>
+                        </div>
+
+                        <div class="score-card-row">
+                            <div class="shell-combo">
+                                <span class="mini-shell up"></span>
+                                <span class="mini-shell down"></span>
+                                <span class="mini-shell down"></span>
+                                <span class="mini-shell down"></span>
+                            </div>
+                            <div class="score-info">
+                                <span class="score-num">1 STEP</span>
+                                <span class="score-desc">1 Mouth-Up</span>
+                            </div>
+                        </div>
+
+                        <div class="score-card-row">
+                            <div class="shell-combo">
+                                <span class="mini-shell up"></span>
+                                <span class="mini-shell up"></span>
+                                <span class="mini-shell down"></span>
+                                <span class="mini-shell down"></span>
+                            </div>
+                            <div class="score-info">
+                                <span class="score-num">2 STEPS</span>
+                                <span class="score-desc">2 Mouth-Up</span>
+                            </div>
+                        </div>
+
+                        <div class="score-card-row">
+                            <div class="shell-combo">
+                                <span class="mini-shell up"></span>
+                                <span class="mini-shell up"></span>
+                                <span class="mini-shell up"></span>
+                                <span class="mini-shell down"></span>
+                            </div>
+                            <div class="score-info">
+                                <span class="score-num">3 STEPS</span>
+                                <span class="score-desc">3 Mouth-Up</span>
+                            </div>
+                        </div>
+
+                        <div class="score-card-row bonus">
+                            <div class="shell-combo">
+                                <span class="mini-shell up"></span>
+                                <span class="mini-shell up"></span>
+                                <span class="mini-shell up"></span>
+                                <span class="mini-shell up"></span>
+                            </div>
+                            <div class="score-info">
+                                <span class="score-num">4 STEPS</span>
+                                <span class="score-desc">4 Mouth-Up • <strong class="gold-txt">+ BONUS
+                                        THROW!</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 3: Safe Squares vs Captures -->
+                <div id="tab-safes" class="rules-tab-panel">
+                    <div class="rules-grid-2col">
+                        <div class="feature-box safe">
+                            <div class="box-icon">🛡️ ✕</div>
+                            <h4>Safe Havens (Cross Squares)</h4>
+                            <p>Squares marked with a cross (✕) are <strong>100% Safe</strong>. Pawns resting here cannot
+                                be captured, and multiple pawns can stack together safely.</p>
+                        </div>
+                        <div class="feature-box capture">
+                            <div class="box-icon">⚔️ 💥</div>
+                            <h4>Enemy Pawn Capture</h4>
+                            <p>Landing on an opponent's pawn on an unmarked square <strong>captures it</strong>, sending
+                                it back to start and granting you a <strong>Bonus Throw</strong>!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 4: Beginner Tips -->
+                <div id="tab-tips" class="rules-tab-panel">
+                    <div class="tips-list">
+                        <div class="tip-item">
+                            <span class="tip-icon">🌟</span>
+                            <div><strong>Golden Rule 1:</strong> Always seek shelter in Safe Squares (✕) if an enemy
+                                pawn is lurking behind you!</div>
+                        </div>
+                        <div class="tip-item">
+                            <span class="tip-icon">🎲</span>
+                            <div><strong>Golden Rule 2:</strong> Rolling an 8 or 4 awards a Bonus Throw — roll again
+                                before selecting which pawn to move!</div>
+                        </div>
+                        <div class="tip-item">
+                            <span class="tip-icon">🏆</span>
+                            <div><strong>Golden Rule 3:</strong> Capturing an opponent grants an extra roll — aggressive
+                                play pays off!</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Pause Modal -->
+        <div id="modal-pause" class="modal">
+            <div class="modal-content glass-card pause-modal-box">
+                <h2 id="pause-title">⏸️ GAME PAUSED</h2>
+                <p id="pause-subtext">Take a breather or adjust match settings!</p>
+                <div class="lang-selector-bar pause-lang-bar">
+                    <span class="lang-bar-label" id="lbl-pause-lang">🌐 Language:</span>
+                    <div class="lang-buttons">
+                        <button class="lang-btn active" data-lang="en">🇬🇧 English</button>
+                        <button class="lang-btn" data-lang="hi">🇮🇳 हिंदी</button>
+                        <button class="lang-btn" data-lang="te_ap">🏛️ తెలుగు (AP)</button>
+                        <button class="lang-btn" data-lang="te_ts">🏰 తెలుగు (TS)</button>
+                        <button class="lang-btn" data-lang="kn">🐘 ಕನ್ನಡ (KA)</button>
+                        <button class="lang-btn" data-lang="or">🇮🇳 ଓଡ଼ିଆ</button>
+                    </div>
+                </div>
+                <div class="pause-actions">
+                    <button id="btn-resume-game" class="primary-btn pulse-btn">
+                        <svg class="theme-icon-svg" viewBox="0 0 24 24" width="18" height="18" style="margin-right: 6px;">
+                            <defs><linearGradient id="pGrad1" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#fff0a0"/><stop offset="100%" stop-color="#b8860b"/></linearGradient></defs>
+                            <path d="M8 5v14l11-7z" fill="url(#pGrad1)"/>
+                        </svg>
+                        <span>RESUME GAME</span>
+                    </button>
+                    <button id="btn-restart-pause" class="secondary-btn">
+                        <svg class="theme-icon-svg" viewBox="0 0 24 24" width="18" height="18" style="margin-right: 6px;">
+                            <defs><linearGradient id="rGrad1" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#fff0a0"/><stop offset="100%" stop-color="#b8860b"/></linearGradient></defs>
+                            <path d="M17.65 6.35A7.958 7.958 0 0012 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" fill="url(#rGrad1)"/>
+                        </svg>
+                        <span>RESTART MATCH</span>
+                    </button>
+                    <button id="btn-menu-pause" class="secondary-btn">
+                        <svg class="theme-icon-svg menu-icon-svg" viewBox="0 0 24 24" width="18" height="18" style="margin-right: 6px;">
+                            <defs><linearGradient id="mGrad2" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#fff0a0"/><stop offset="100%" stop-color="#b8860b"/></linearGradient></defs>
+                            <path d="M12 2.5L2 9.5h2.5V20a1 1 0 001 1h13a1 1 0 001-1V9.5H22L12 2.5zm0 3.8l5 3.7V19H7V10l5-3.7zM10.5 14h3v5h-3v-5z" fill="url(#mGrad2)"/>
+                            <circle cx="12" cy="7.2" r="1.1" fill="url(#mGrad2)"/>
+                        </svg>
+                        <span>QUIT TO MAIN MENU</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Victory Modal -->
+        <div id="modal-victory" class="modal">
+            <div class="modal-content glass-card victory-card">
+                <h1 id="victory-title">🎉 VICTORY! 🎉</h1>
+                <p id="victory-msg">Player 1 wins the match!</p>
+                <button id="btn-victory-restart" class="primary-btn">PLAY AGAIN</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="game.js?v=90001"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').catch(() => {});
+            });
+        }
+    </script>
+</body>
+
+</html>

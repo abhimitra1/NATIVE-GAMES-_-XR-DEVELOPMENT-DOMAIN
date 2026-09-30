@@ -1,0 +1,685 @@
+* {
+    box-sizing: border-box;
+}
+
+
+body {
+
+    margin: 0;
+
+    min-height: 100vh;
+
+    font-family: Georgia, serif;
+
+    color: #f8d98a;
+
+    background:
+        radial-gradient(
+            circle at top,
+            #4a1720,
+            #21070d 65%,
+            #120307
+        );
+
+}
+
+
+/* MAIN */
+
+.dashboard {
+
+    width: 100%;
+
+    max-width: 900px;
+
+    margin: auto;
+
+    padding: 30px 25px 50px;
+
+}
+
+
+/* HEADER */
+
+header {
+
+    text-align: center;
+
+    margin-bottom: 30px;
+
+}
+
+
+.small-decoration {
+
+    font-size: 30px;
+
+    margin-bottom: 5px;
+
+}
+
+
+h1 {
+
+    margin: 0;
+
+    font-size: 45px;
+
+    letter-spacing: 8px;
+
+    color: #f6d27c;
+
+}
+
+
+.subtitle {
+
+    letter-spacing: 5px;
+
+    font-size: 13px;
+
+    color: #d8b875;
+
+}
+
+
+/* WELCOME */
+
+.welcome-card {
+
+    display: flex;
+
+    gap: 25px;
+
+    align-items: center;
+
+    padding: 30px;
+
+    border: 1px solid #a77a36;
+
+    border-radius: 25px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #431821,
+            #2b0c14
+        );
+
+    box-shadow:
+        0 0 25px rgba(0,0,0,0.3);
+
+}
+
+
+.welcome-icon {
+
+    font-size: 65px;
+
+}
+
+
+.welcome-card h2 {
+
+    margin-top: 0;
+
+    font-size: 30px;
+
+}
+
+
+.welcome-card p {
+
+    color: #e3cda3;
+
+    font-size: 17px;
+
+    line-height: 1.7;
+
+}
+
+
+/* BUTTON */
+
+.outline-button {
+
+    padding: 14px 25px;
+
+    border: 1px solid #c99b45;
+
+    border-radius: 15px;
+
+    background: transparent;
+
+    color: #f5d078;
+
+    font-size: 15px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+}
+
+
+.outline-button:hover {
+
+    background: #5a2029;
+
+}
+
+
+/* SECTION TITLE */
+
+.section-title {
+
+    text-align: center;
+
+    margin: 35px 0 18px;
+
+    letter-spacing: 3px;
+
+    font-size: 20px;
+
+}
+
+
+/* GAME CARDS */
+
+.cards {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 15px;
+
+}
+
+
+.game-card {
+
+    padding: 25px 15px;
+
+    text-align: center;
+
+    border: 1px solid #70402c;
+
+    border-radius: 20px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #4a1c23,
+            #2c0c15
+        );
+
+    cursor: pointer;
+
+    transition: 0.2s;
+
+}
+
+
+.game-card:hover {
+
+    transform: translateY(-4px);
+
+}
+
+
+.game-card.selected {
+
+    border: 2px solid #e3bd67;
+
+    box-shadow:
+        0 0 15px
+        rgba(227,189,103,0.35);
+
+}
+
+
+.card-icon {
+
+    font-size: 40px;
+
+}
+
+
+.game-card h3 {
+
+    margin-bottom: 5px;
+
+}
+
+
+.game-card p {
+
+    color: #d7c39b;
+
+    line-height: 1.5;
+
+}
+
+
+/* SIDE */
+
+.side-cards {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 15px;
+
+}
+
+
+.side-card {
+
+    padding: 20px;
+
+    text-align: center;
+
+    border: 1px solid #70402c;
+
+    border-radius: 20px;
+
+    background: #351019;
+
+    cursor: pointer;
+
+}
+
+
+.side-card.selected {
+
+    border: 2px solid #e3bd67;
+
+    box-shadow:
+        0 0 15px
+        rgba(227,189,103,0.35);
+
+}
+
+
+.side-symbol {
+
+    font-size: 45px;
+
+    margin-bottom: 8px;
+
+}
+
+
+.white-piece {
+
+    color: #fff2cc;
+
+    text-shadow:
+        0 0 8px #fff;
+
+}
+
+
+.black-piece {
+
+    color: #111;
+
+    text-shadow:
+        0 0 2px #fff;
+
+}
+
+
+/* SETTINGS */
+
+.settings {
+
+    margin-top: 35px;
+
+    border: 1px solid #70402c;
+
+    border-radius: 22px;
+
+    background: #321019;
+
+    padding: 25px 30px;
+
+}
+
+
+.settings h3 {
+
+    text-align: center;
+
+    letter-spacing: 4px;
+
+    margin-top: 0;
+
+}
+
+
+.setting-row {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 18px 0;
+
+    border-top: 1px solid #54252b;
+
+    color: #e8d3a7;
+
+}
+
+
+.setting-row span:first-child {
+
+    flex: 1;
+
+}
+
+
+select {
+
+    padding: 12px 35px 12px 15px;
+
+    border: 1px solid #936633;
+
+    border-radius: 12px;
+
+    background: #2b0c14;
+
+    color: #f4d48a;
+
+}
+
+
+/* TOGGLE */
+
+.switch {
+
+    position: relative;
+
+    width: 48px;
+
+    height: 25px;
+
+}
+
+
+.switch input {
+
+    display: none;
+
+}
+
+
+.slider {
+
+    position: absolute;
+
+    inset: 0;
+
+    border-radius: 20px;
+
+    background: #555;
+
+    cursor: pointer;
+
+}
+
+
+.slider:before {
+
+    content: "";
+
+    position: absolute;
+
+    width: 19px;
+
+    height: 19px;
+
+    left: 3px;
+
+    top: 3px;
+
+    background: white;
+
+    border-radius: 50%;
+
+    transition: 0.2s;
+
+}
+
+
+input:checked + .slider {
+
+    background: #c99b45;
+
+}
+
+
+input:checked + .slider:before {
+
+    transform: translateX(23px);
+
+}
+
+
+/* START */
+
+.start-button {
+
+    display: block;
+
+    width: 100%;
+
+    margin-top: 25px;
+
+    padding: 18px;
+
+    border: 2px solid #e0b95e;
+
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #9c652b,
+            #5b281f
+        );
+
+    color: #fff0bd;
+
+    font-size: 20px;
+
+    font-weight: bold;
+
+    letter-spacing: 3px;
+
+    cursor: pointer;
+
+}
+
+
+.start-button:hover {
+
+    transform: scale(1.02);
+
+}
+
+
+/* POPUP */
+
+.popup {
+
+    display: none;
+
+    position: fixed;
+
+    inset: 0;
+
+    background: rgba(0,0,0,0.75);
+
+    justify-content: center;
+
+    align-items: center;
+
+    padding: 20px;
+
+}
+
+
+.popup.show {
+
+    display: flex;
+
+}
+
+
+.popup-box {
+
+    position: relative;
+
+    width: 100%;
+
+    max-width: 500px;
+
+    padding: 35px;
+
+    border: 2px solid #c99b45;
+
+    border-radius: 25px;
+
+    background: #351019;
+
+}
+
+
+.popup-box h2 {
+
+    text-align: center;
+
+}
+
+
+.popup-box p {
+
+    color: #e3cda3;
+
+    line-height: 1.6;
+
+}
+
+
+.close-button {
+
+    position: absolute;
+
+    right: 15px;
+
+    top: 12px;
+
+    background: transparent;
+
+    border: none;
+
+    color: #f5d078;
+
+    font-size: 25px;
+
+    cursor: pointer;
+
+}
+
+
+/* MOBILE */
+
+@media (max-width: 700px) {
+
+    .dashboard {
+
+        padding: 20px 15px 40px;
+
+    }
+
+
+    h1 {
+
+        font-size: 32px;
+
+        letter-spacing: 5px;
+
+    }
+
+
+    .subtitle {
+
+        font-size: 10px;
+
+        letter-spacing: 3px;
+
+    }
+
+
+    .welcome-card {
+
+        flex-direction: column;
+
+        text-align: center;
+
+        padding: 25px 20px;
+
+    }
+
+
+    .welcome-card h2 {
+
+        font-size: 25px;
+
+    }
+
+
+    .cards {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .side-cards {
+
+        grid-template-columns:
+            repeat(3, 1fr);
+
+    }
+
+
+    .side-card {
+
+        padding: 15px 5px;
+
+    }
+
+
+    .side-symbol {
+
+        font-size: 32px;
+
+    }
+
+
+    .settings {
+
+        padding: 20px;
+
+    }
+
+}

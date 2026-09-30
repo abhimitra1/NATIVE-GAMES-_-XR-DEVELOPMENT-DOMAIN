@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Chaturanga</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <header>
+
+        <div class="small-decoration">✦</div>
+
+        <h1>CHATURANGA</h1>
+
+        <p class="subtitle">
+            THE ANCIENT INDIAN BOARD GAME
+        </p>
+
+    </header>
+
+
+    <!-- WELCOME -->
+
+    <section class="welcome-card">
+
+        <div class="welcome-icon">
+            ♞
+        </div>
+
+        <div>
+
+            <h2>Welcome to Chaturanga</h2>
+
+            <p>
+                Plan your moves, capture your opponent's
+                pieces and become the master of the board.
+            </p>
+
+            <button
+                class="outline-button"
+                onclick="showHowToPlay()">
+
+                📖 HOW TO PLAY
+
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- GAME MODE -->
+
+    <h3 class="section-title">
+        CHOOSE GAME MODE
+    </h3>
+
+    <section class="cards">
+
+        <div
+            class="game-card selected"
+            onclick="selectMode(this, 'AI')">
+
+            <div class="card-icon">🤖</div>
+
+            <h3>VS AI</h3>
+
+            <p>Play against the computer</p>
+
+        </div>
+
+
+        <div
+            class="game-card"
+            onclick="selectMode(this, '2 Players')">
+
+            <div class="card-icon">👥</div>
+
+            <h3>2 PLAYERS</h3>
+
+            <p>Local pass-and-play</p>
+
+        </div>
+
+
+        <div
+            class="game-card"
+            onclick="selectMode(this, 'Practice')">
+
+            <div class="card-icon">🎯</div>
+
+            <h3>PRACTICE</h3>
+
+            <p>Practice your moves</p>
+
+        </div>
+
+    </section>
+
+
+    <!-- SIDE -->
+
+    <h3 class="section-title">
+        CHOOSE YOUR SIDE
+    </h3>
+
+    <section class="side-cards">
+
+        <div
+            class="side-card selected"
+            onclick="selectSide(this, 'White')">
+
+            <div class="side-symbol white-piece">
+                ♔
+            </div>
+
+            <span>WHITE</span>
+
+        </div>
+
+
+        <div
+            class="side-card"
+            onclick="selectSide(this, 'Black')">
+
+            <div class="side-symbol black-piece">
+                ♚
+            </div>
+
+            <span>BLACK</span>
+
+        </div>
+
+
+        <div
+            class="side-card"
+            onclick="selectSide(this, 'Random')">
+
+            <div class="side-symbol">
+                🎲
+            </div>
+
+            <span>RANDOM</span>
+
+        </div>
+
+    </section>
+
+
+    <!-- SETTINGS -->
+
+    <section class="settings">
+
+        <h3>SETTINGS</h3>
+
+
+        <div class="setting-row">
+
+            <span>LANGUAGE</span>
+
+            <select id="language">
+
+                <option>English</option>
+                <option>Hindi</option>
+
+            </select>
+
+        </div>
+
+
+        <div class="setting-row">
+
+            <span>SOUND</span>
+
+            <label class="switch">
+
+                <input
+                    type="checkbox"
+                    id="soundToggle"
+                    checked>
+
+                <span class="slider"></span>
+
+            </label>
+
+            <span id="soundText">ON</span>
+
+        </div>
+
+    </section>
+
+
+    <!-- START -->
+
+    <button
+        class="start-button"
+        onclick="startGame()">
+
+        ⚔ START GAME
+
+    </button>
+
+
+    <!-- HOW TO PLAY POPUP -->
+
+    <div
+        id="howToPlay"
+        class="popup">
+
+        <div class="popup-box">
+
+            <button
+                class="close-button"
+                onclick="closeHowToPlay()">
+
+                ✕
+
+            </button>
+
+            <h2>HOW TO PLAY</h2>
+
+            <p>1. Select your game mode.</p>
+
+            <p>2. Choose your side.</p>
+
+            <p>3. Select a piece on the board.</p>
+
+            <p>4. Select a legal square to move.</p>
+
+            <p>5. Capture opponent pieces.</p>
+
+            <p>6. Protect your King.</p>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================================= -->
+<!-- DASHBOARD JAVASCRIPT -->
+<!-- ================================= -->
+
+<script>
+
+let selectedMode = "AI";
+
+let selectedSide = "White";
+
+
+// SELECT GAME MODE
+
+function selectMode(card, mode) {
+
+    document
+        .querySelectorAll(".game-card")
+        .forEach(function(item) {
+
+            item.classList.remove("selected");
+
+        });
+
+    card.classList.add("selected");
+
+    selectedMode = mode;
+
+}
+
+
+// SELECT SIDE
+
+function selectSide(card, side) {
+
+    document
+        .querySelectorAll(".side-card")
+        .forEach(function(item) {
+
+            item.classList.remove("selected");
+
+        });
+
+    card.classList.add("selected");
+
+    selectedSide = side;
+
+}
+
+
+// HOW TO PLAY
+
+function showHowToPlay() {
+
+    document
+        .getElementById("howToPlay")
+        .classList.add("show");
+
+}
+
+
+function closeHowToPlay() {
+
+    document
+        .getElementById("howToPlay")
+        .classList.remove("show");
+
+}
+
+
+// SOUND
+
+document
+    .getElementById("soundToggle")
+    .addEventListener("change", function() {
+
+        if (this.checked) {
+
+            document
+                .getElementById("soundText")
+                .textContent = "ON";
+
+        } else {
+
+            document
+                .getElementById("soundText")
+                .textContent = "OFF";
+
+        }
+
+    });
+
+
+// START GAME
+
+function startGame() {
+
+    localStorage.setItem(
+        "gameMode",
+        selectedMode
+    );
+
+    localStorage.setItem(
+        "playerSide",
+        selectedSide
+    );
+
+    window.location.href = "game.html";
+
+}
+
+</script>
+
+</body>
+
+</html>

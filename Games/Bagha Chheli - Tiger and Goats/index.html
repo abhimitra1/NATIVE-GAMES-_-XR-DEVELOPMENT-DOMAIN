@@ -1,0 +1,1956 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Bagha Chheli - Tiger and Goats</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+
+    font-family: Arial, sans-serif;
+
+    background:
+        linear-gradient(
+            135deg,
+            #0e4f3a,
+            #17684b
+        );
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+}
+
+
+/* =========================
+   SCREEN
+========================= */
+
+.screen {
+
+    width: 720px;
+    max-width: 100%;
+
+    background: #fff7e5;
+
+    padding: 25px;
+
+    border-radius: 20px;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,0.3);
+
+    text-align: center;
+}
+
+
+.hide {
+    display: none;
+}
+
+
+/* =========================
+   HEADINGS
+========================= */
+
+h1 {
+
+    margin: 0;
+
+    color: #7a3218;
+
+    font-size: 40px;
+}
+
+
+.logo {
+
+    font-size: 70px;
+
+    margin-bottom: 10px;
+}
+
+
+.subtitle {
+
+    font-size: 18px;
+
+    color: #555;
+
+    margin-bottom: 20px;
+}
+
+
+/* =========================
+   BUTTONS
+========================= */
+
+button {
+
+    display: block;
+
+    width: 280px;
+
+    margin: 12px auto;
+
+    padding: 14px;
+
+    border: none;
+
+    border-radius: 9px;
+
+    background: #7a3218;
+
+    color: white;
+
+    font-size: 18px;
+
+    cursor: pointer;
+}
+
+
+button:hover {
+
+    background: #a64b25;
+
+}
+
+
+/* =========================
+   GAME INFO
+========================= */
+
+.info {
+
+    display: flex;
+
+    justify-content: space-around;
+
+    gap: 10px;
+
+    background: #ead7ad;
+
+    padding: 12px;
+
+    border-radius: 10px;
+
+    font-weight: bold;
+
+    flex-wrap: wrap;
+}
+
+
+/* =========================
+   CANVAS
+========================= */
+
+canvas {
+
+    width: 100%;
+
+    max-width: 600px;
+
+    height: auto;
+
+    background: #d9b879;
+
+    border: 7px solid #633718;
+
+    border-radius: 10px;
+
+    margin: 18px auto;
+
+    display: block;
+
+    cursor: pointer;
+}
+
+
+/* =========================
+   MESSAGE
+========================= */
+
+#msg {
+
+    min-height: 28px;
+
+    color: #7a3218;
+
+    font-weight: bold;
+
+    font-size: 17px;
+}
+
+
+/* =========================
+   RULES
+========================= */
+
+.rules {
+
+    text-align: left;
+
+    background: #fffaf0;
+
+    padding: 15px;
+
+    border-radius: 10px;
+
+    margin-top: 15px;
+}
+
+
+.rules li {
+
+    margin: 8px 0;
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     MAIN MENU
+===================================================== -->
+
+<div id="menu" class="screen">
+
+    <div class="logo">
+        🐯 🐐
+    </div>
+
+    <h1>
+        Bagha Chheli
+    </h1>
+
+    <p class="subtitle">
+        Tiger and Goats
+    </p>
+
+
+    <button onclick="startGame()">
+
+        ▶ START GAME
+
+    </button>
+
+
+    <button onclick="showHow()">
+
+        📖 HOW TO PLAY
+
+    </button>
+
+
+    <p>
+        Traditional Tiger and Goats Strategy Game
+    </p>
+
+</div>
+
+
+
+<!-- =====================================================
+     HOW TO PLAY
+===================================================== -->
+
+<div id="how" class="screen hide">
+
+    <h1>
+        📖 How to Play
+    </h1>
+
+
+    <div class="rules">
+
+        <ul>
+
+            <li>
+                There is 1 Tiger and 20 Goats.
+            </li>
+
+            <li>
+                At the beginning, click empty points
+                to place goats.
+            </li>
+
+            <li>
+                Click the Tiger to select it.
+            </li>
+
+            <li>
+                The Tiger can move to an adjacent
+                empty point.
+            </li>
+
+            <li>
+                The Tiger can capture a goat by
+                jumping over it to an empty point.
+            </li>
+
+            <li>
+                After all goats are placed,
+                select a goat and move it one step.
+            </li>
+
+            <li>
+                Tiger wins after capturing
+                5 goats.
+            </li>
+
+            <li>
+                Goats win when the Tiger has
+                no legal move.
+            </li>
+
+        </ul>
+
+    </div>
+
+
+    <button onclick="showMenu()">
+
+        ⬅ MAIN MENU
+
+    </button>
+
+</div>
+
+
+
+<!-- =====================================================
+     GAME SCREEN
+===================================================== -->
+
+<div id="game" class="screen hide">
+
+    <h1>
+        🐯 Bagha Chheli 🐐
+    </h1>
+
+
+    <p class="subtitle">
+        Tiger and Goats — 2D HTML5 Game
+    </p>
+
+
+    <!-- GAME INFORMATION -->
+
+    <div class="info">
+
+        <span>
+            Turn:
+            <b id="turn">
+                Goat
+            </b>
+        </span>
+
+
+        <span>
+            Goats to place:
+            <b id="left">
+                20
+            </b>
+        </span>
+
+
+        <span>
+            Captured:
+            <b id="cap">
+                0
+            </b>
+            / 5
+        </span>
+
+    </div>
+
+
+    <!-- GAME BOARD -->
+
+    <canvas
+        id="c"
+        width="600"
+        height="600">
+    </canvas>
+
+
+    <!-- MESSAGE -->
+
+    <div id="msg">
+
+        Click an empty point
+        to place a goat.
+
+    </div>
+
+
+    <!-- BUTTONS -->
+
+    <button onclick="reset()">
+
+        🔄 RESTART GAME
+
+    </button>
+
+
+    <button onclick="showMenu()">
+
+        🏠 MAIN MENU
+
+    </button>
+
+</div>
+
+
+
+<script>
+
+/* =====================================================
+   GAME VARIABLES
+===================================================== */
+
+const canvas =
+    document.getElementById("c");
+
+const ctx =
+    canvas.getContext("2d");
+
+
+const turnText =
+    document.getElementById("turn");
+
+const leftText =
+    document.getElementById("left");
+
+const captureText =
+    document.getElementById("cap");
+
+const message =
+    document.getElementById("msg");
+
+
+/* BOARD */
+
+const N = 5;
+
+const P = 60;
+
+const S = 120;
+
+
+/* GAME */
+
+let tiger;
+
+let goats = [];
+
+let turn;
+
+let placed;
+
+let captures;
+
+let selected;
+
+let gameOver;
+
+
+/* =====================================================
+   MENU FUNCTIONS
+===================================================== */
+
+function showMenu() {
+
+    document
+        .getElementById("menu")
+        .classList.remove("hide");
+
+    document
+        .getElementById("how")
+        .classList.add("hide");
+
+    document
+        .getElementById("game")
+        .classList.add("hide");
+
+}
+
+
+function showHow() {
+
+    document
+        .getElementById("menu")
+        .classList.add("hide");
+
+    document
+        .getElementById("how")
+        .classList.remove("hide");
+
+    document
+        .getElementById("game")
+        .classList.add("hide");
+
+}
+
+
+function startGame() {
+
+    document
+        .getElementById("menu")
+        .classList.add("hide");
+
+    document
+        .getElementById("how")
+        .classList.add("hide");
+
+    document
+        .getElementById("game")
+        .classList.remove("hide");
+
+
+    reset();
+
+}
+
+
+/* =====================================================
+   BOARD POSITION
+===================================================== */
+
+function position(row, col) {
+
+    return {
+
+        x: P + col * S,
+
+        y: P + row * S
+
+    };
+
+}
+
+
+/* =====================================================
+   CHECK OCCUPIED
+===================================================== */
+
+function occupied(row, col) {
+
+    if (
+
+        tiger.row === row &&
+
+        tiger.col === col
+
+    ) {
+
+        return "tiger";
+
+    }
+
+
+    for (let goat of goats) {
+
+        if (
+
+            goat.row === row &&
+
+            goat.col === col
+
+        ) {
+
+            return "goat";
+
+        }
+
+    }
+
+
+    return null;
+
+}
+
+
+/* =====================================================
+   CHECK BOARD
+===================================================== */
+
+function inside(row, col) {
+
+    return (
+
+        row >= 0 &&
+
+        row < N &&
+
+        col >= 0 &&
+
+        col < N
+
+    );
+
+}
+
+
+/* =====================================================
+   NEIGHBOURS
+===================================================== */
+
+function neighbours(row, col) {
+
+    let result = [];
+
+
+    for (
+        let dr = -1;
+        dr <= 1;
+        dr++
+    ) {
+
+        for (
+            let dc = -1;
+            dc <= 1;
+            dc++
+        ) {
+
+            if (
+                dr === 0 &&
+                dc === 0
+            ) {
+
+                continue;
+
+            }
+
+
+            let r =
+                row + dr;
+
+            let c =
+                col + dc;
+
+
+            if (
+                inside(r, c)
+            ) {
+
+                result.push({
+
+                    row: r,
+
+                    col: c
+
+                });
+
+            }
+
+        }
+
+    }
+
+
+    return result;
+
+}
+
+
+/* =====================================================
+   ADJACENT
+===================================================== */
+
+function adjacent(a, b) {
+
+    return (
+
+        Math.abs(
+            a.row - b.row
+        ) <= 1
+
+        &&
+
+        Math.abs(
+            a.col - b.col
+        ) <= 1
+
+        &&
+
+        !(
+            a.row === b.row &&
+            a.col === b.col
+        )
+
+    );
+
+}
+
+
+/* =====================================================
+   RESET GAME
+===================================================== */
+
+function reset() {
+
+    tiger = {
+
+        row: 2,
+
+        col: 2
+
+    };
+
+
+    goats = [];
+
+
+    turn = "goat";
+
+
+    placed = 0;
+
+
+    captures = 0;
+
+
+    selected = null;
+
+
+    gameOver = false;
+
+
+    message.innerText =
+        "Click an empty point to place a goat.";
+
+
+    updateUI();
+
+    draw();
+
+}
+
+
+/* =====================================================
+   UPDATE UI
+===================================================== */
+
+function updateUI() {
+
+    turnText.innerText =
+
+        turn === "goat"
+
+            ? "Goat"
+
+            : "Tiger";
+
+
+    leftText.innerText =
+
+        20 - placed;
+
+
+    captureText.innerText =
+
+        captures;
+
+}
+
+
+/* =====================================================
+   DRAW GAME
+===================================================== */
+
+function draw() {
+
+    /* CLEAR */
+
+    ctx.clearRect(
+
+        0,
+
+        0,
+
+        canvas.width,
+
+        canvas.height
+
+    );
+
+
+    /* BACKGROUND */
+
+    ctx.fillStyle =
+        "#d9b879";
+
+
+    ctx.fillRect(
+
+        0,
+
+        0,
+
+        600,
+
+        600
+
+    );
+
+
+    /* BOARD */
+
+    ctx.strokeStyle =
+        "#633718";
+
+    ctx.lineWidth = 5;
+
+
+    /* HORIZONTAL */
+
+    for (
+        let row = 0;
+        row < N;
+        row++
+    ) {
+
+        let a =
+            position(row, 0);
+
+        let b =
+            position(row, 4);
+
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            a.x,
+            a.y
+        );
+
+        ctx.lineTo(
+            b.x,
+            b.y
+        );
+
+        ctx.stroke();
+
+    }
+
+
+    /* VERTICAL */
+
+    for (
+        let col = 0;
+        col < N;
+        col++
+    ) {
+
+        let a =
+            position(0, col);
+
+        let b =
+            position(4, col);
+
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            a.x,
+            a.y
+        );
+
+        ctx.lineTo(
+            b.x,
+            b.y
+        );
+
+        ctx.stroke();
+
+    }
+
+
+    /* DIAGONAL */
+
+    for (
+        let row = 0;
+        row < 4;
+        row++
+    ) {
+
+        for (
+            let col = 0;
+            col < 4;
+            col++
+        ) {
+
+            let a =
+                position(row, col);
+
+            let b =
+                position(
+                    row + 1,
+                    col + 1
+                );
+
+
+            let c =
+                position(
+                    row,
+                    col + 1
+                );
+
+            let d =
+                position(
+                    row + 1,
+                    col
+                );
+
+
+            ctx.beginPath();
+
+            ctx.moveTo(
+                a.x,
+                a.y
+            );
+
+            ctx.lineTo(
+                b.x,
+                b.y
+            );
+
+            ctx.stroke();
+
+
+            ctx.beginPath();
+
+            ctx.moveTo(
+                c.x,
+                c.y
+            );
+
+            ctx.lineTo(
+                d.x,
+                d.y
+            );
+
+            ctx.stroke();
+
+        }
+
+    }
+
+
+    /* BOARD POINTS */
+
+    for (
+        let row = 0;
+        row < N;
+        row++
+    ) {
+
+        for (
+            let col = 0;
+            col < N;
+            col++
+        ) {
+
+            let p =
+                position(row, col);
+
+
+            ctx.beginPath();
+
+            ctx.arc(
+
+                p.x,
+
+                p.y,
+
+                9,
+
+                0,
+
+                Math.PI * 2
+
+            );
+
+
+            ctx.fillStyle =
+                "#fff0c8";
+
+
+            ctx.fill();
+
+
+            ctx.strokeStyle =
+                "#542d18";
+
+
+            ctx.lineWidth = 3;
+
+
+            ctx.stroke();
+
+        }
+
+    }
+
+
+    /* SELECTION */
+
+    if (selected) {
+
+        let p =
+            position(
+                selected.row,
+                selected.col
+            );
+
+
+        ctx.beginPath();
+
+        ctx.arc(
+
+            p.x,
+
+            p.y,
+
+            40,
+
+            0,
+
+            Math.PI * 2
+
+        );
+
+
+        ctx.strokeStyle =
+            "#1684ff";
+
+
+        ctx.lineWidth = 5;
+
+
+        ctx.stroke();
+
+    }
+
+
+    /* GOATS */
+
+    for (let goat of goats) {
+
+        drawGoat(
+            goat.row,
+            goat.col
+        );
+
+    }
+
+
+    /* TIGER */
+
+    drawTiger(
+        tiger.row,
+        tiger.col
+    );
+
+}
+
+
+/* =====================================================
+   DRAW GOAT
+===================================================== */
+
+function drawGoat(row, col) {
+
+    let p =
+        position(row, col);
+
+
+    ctx.beginPath();
+
+    ctx.arc(
+
+        p.x,
+
+        p.y,
+
+        25,
+
+        0,
+
+        Math.PI * 2
+
+    );
+
+
+    ctx.fillStyle =
+        "#eeeeee";
+
+
+    ctx.fill();
+
+
+    ctx.strokeStyle =
+        "#333333";
+
+
+    ctx.lineWidth = 3;
+
+
+    ctx.stroke();
+
+
+    /* EYES */
+
+    ctx.fillStyle =
+        "#111111";
+
+
+    ctx.beginPath();
+
+    ctx.arc(
+
+        p.x - 8,
+
+        p.y - 4,
+
+        3,
+
+        0,
+
+        Math.PI * 2
+
+    );
+
+    ctx.fill();
+
+
+    ctx.beginPath();
+
+    ctx.arc(
+
+        p.x + 8,
+
+        p.y - 4,
+
+        3,
+
+        0,
+
+        Math.PI * 2
+
+    );
+
+    ctx.fill();
+
+}
+
+
+/* =====================================================
+   DRAW TIGER
+===================================================== */
+
+function drawTiger(row, col) {
+
+    let p =
+        position(row, col);
+
+
+    /* BODY */
+
+    ctx.beginPath();
+
+    ctx.arc(
+
+        p.x,
+
+        p.y,
+
+        32,
+
+        0,
+
+        Math.PI * 2
+
+    );
+
+
+    ctx.fillStyle =
+        "#f28c28";
+
+
+    ctx.fill();
+
+
+    ctx.strokeStyle =
+        "#71340f";
+
+
+    ctx.lineWidth = 5;
+
+
+    ctx.stroke();
+
+
+    /* EYES */
+
+    ctx.fillStyle =
+        "white";
+
+
+    ctx.beginPath();
+
+    ctx.arc(
+
+        p.x - 10,
+
+        p.y - 7,
+
+        7,
+
+        0,
+
+        Math.PI * 2
+
+    );
+
+    ctx.fill();
+
+
+    ctx.beginPath();
+
+    ctx.arc(
+
+        p.x + 10,
+
+        p.y - 7,
+
+        7,
+
+        0,
+
+        Math.PI * 2
+
+    );
+
+    ctx.fill();
+
+
+    /* PUPILS */
+
+    ctx.fillStyle =
+        "black";
+
+
+    ctx.beginPath();
+
+    ctx.arc(
+
+        p.x - 10,
+
+        p.y - 7,
+
+        3,
+
+        0,
+
+        Math.PI * 2
+
+    );
+
+    ctx.fill();
+
+
+    ctx.beginPath();
+
+    ctx.arc(
+
+        p.x + 10,
+
+        p.y - 7,
+
+        3,
+
+        0,
+
+        Math.PI * 2
+
+    );
+
+    ctx.fill();
+
+}
+
+
+/* =====================================================
+   GET CLICKED BOARD POINT
+===================================================== */
+
+function getClickedPoint(event) {
+
+    let rect =
+        canvas.getBoundingClientRect();
+
+
+    let mouseX =
+        (
+            event.clientX -
+            rect.left
+        )
+        *
+        600 /
+        rect.width;
+
+
+    let mouseY =
+        (
+            event.clientY -
+            rect.top
+        )
+        *
+        600 /
+        rect.height;
+
+
+    let closest = null;
+
+    let distance = 40;
+
+
+    for (
+        let row = 0;
+        row < N;
+        row++
+    ) {
+
+        for (
+            let col = 0;
+            col < N;
+            col++
+        ) {
+
+            let p =
+                position(
+                    row,
+                    col
+                );
+
+
+            let d =
+                Math.hypot(
+
+                    mouseX - p.x,
+
+                    mouseY - p.y
+
+                );
+
+
+            if (
+                d < distance
+            ) {
+
+                distance = d;
+
+
+                closest = {
+
+                    row: row,
+
+                    col: col
+
+                };
+
+            }
+
+        }
+
+    }
+
+
+    return closest;
+
+}
+
+
+/* =====================================================
+   FIND GOAT
+===================================================== */
+
+function findGoat(row, col) {
+
+    return goats.findIndex(
+
+        goat =>
+
+            goat.row === row &&
+
+            goat.col === col
+
+    );
+
+}
+
+
+/* =====================================================
+   TIGER HAS MOVE
+===================================================== */
+
+function tigerHasMove() {
+
+    let neighboursList =
+        neighbours(
+            tiger.row,
+            tiger.col
+        );
+
+
+    for (
+        let p of neighboursList
+    ) {
+
+        if (
+            !occupied(
+                p.row,
+                p.col
+            )
+        ) {
+
+            return true;
+
+        }
+
+    }
+
+
+    return false;
+
+}
+
+
+/* =====================================================
+   CHECK WIN
+===================================================== */
+
+function checkWinner() {
+
+    /* TIGER WIN */
+
+    if (
+        captures >= 5
+    ) {
+
+        gameOver = true;
+
+
+        message.innerText =
+            "🐯 TIGER WINS! 5 goats captured.";
+
+
+        return true;
+
+    }
+
+
+    /* GOAT WIN */
+
+    if (
+        !tigerHasMove()
+    ) {
+
+        gameOver = true;
+
+
+        message.innerText =
+            "🐐 GOATS WIN! Tiger is trapped.";
+
+
+        return true;
+
+    }
+
+
+    return false;
+
+}
+
+
+/* =====================================================
+   PLACE GOAT
+===================================================== */
+
+function placeGoat(point) {
+
+    if (
+        occupied(
+            point.row,
+            point.col
+        )
+    ) {
+
+        message.innerText =
+            "This point is already occupied.";
+
+        return;
+
+    }
+
+
+    goats.push({
+
+        row: point.row,
+
+        col: point.col
+
+    });
+
+
+    placed++;
+
+
+    turn = "tiger";
+
+
+    selected = null;
+
+
+    message.innerText =
+        "Tiger turn: click the Tiger.";
+
+
+    updateUI();
+
+    draw();
+
+}
+
+
+/* =====================================================
+   MOVE TIGER
+===================================================== */
+
+function moveTiger(point) {
+
+    if (
+        !adjacent(
+            tiger,
+            point
+        )
+    ) {
+
+        message.innerText =
+            "Tiger can move only to an adjacent point.";
+
+        return;
+
+    }
+
+
+    if (
+        occupied(
+            point.row,
+            point.col
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    tiger = {
+
+        row: point.row,
+
+        col: point.col
+
+    };
+
+
+    selected = null;
+
+
+    if (
+        !checkWinner()
+    ) {
+
+        turn = "goat";
+
+
+        message.innerText =
+
+            placed < 20
+
+                ? "Goat turn: place a goat."
+
+                : "Goat turn: move a goat.";
+
+    }
+
+
+    updateUI();
+
+    draw();
+
+}
+
+
+/* =====================================================
+   CAPTURE GOAT
+===================================================== */
+
+function captureGoat(point) {
+
+    let dr =
+        point.row -
+        tiger.row;
+
+
+    let dc =
+        point.col -
+        tiger.col;
+
+
+    let landingRow =
+        point.row + dr;
+
+
+    let landingCol =
+        point.col + dc;
+
+
+    if (
+        !inside(
+            landingRow,
+            landingCol
+        )
+    ) {
+
+        message.innerText =
+            "Tiger cannot jump outside the board.";
+
+        return;
+
+    }
+
+
+    if (
+        occupied(
+            landingRow,
+            landingCol
+        )
+    ) {
+
+        message.innerText =
+            "Tiger cannot jump there.";
+
+        return;
+
+    }
+
+
+    let index =
+        findGoat(
+            point.row,
+            point.col
+        );
+
+
+    if (
+        index === -1
+    ) {
+
+        return;
+
+    }
+
+
+    goats.splice(
+        index,
+        1
+    );
+
+
+    tiger = {
+
+        row: landingRow,
+
+        col: landingCol
+
+    };
+
+
+    captures++;
+
+
+    selected = null;
+
+
+    if (
+        !checkWinner()
+    ) {
+
+        turn = "goat";
+
+
+        message.innerText =
+
+            placed < 20
+
+                ? "Goat turn: place a goat."
+
+                : "Goat turn: move a goat.";
+
+    }
+
+
+    updateUI();
+
+    draw();
+
+}
+
+
+/* =====================================================
+   CANVAS CLICK
+===================================================== */
+
+canvas.addEventListener(
+    "click",
+    function(event) {
+
+        if (gameOver) {
+
+            return;
+
+        }
+
+
+        let point =
+            getClickedPoint(event);
+
+
+        if (!point) {
+
+            return;
+
+        }
+
+
+        /* =====================
+           GOAT TURN
+        ===================== */
+
+        if (
+            turn === "goat"
+        ) {
+
+            /* PLACE GOATS */
+
+            if (
+                placed < 20
+            ) {
+
+                placeGoat(point);
+
+                return;
+
+            }
+
+
+            /* SELECT GOAT */
+
+            let goatIndex =
+                findGoat(
+                    point.row,
+                    point.col
+                );
+
+
+            if (
+                goatIndex !== -1
+            ) {
+
+                selected = point;
+
+
+                message.innerText =
+                    "Goat selected. Click an adjacent empty point.";
+
+
+                draw();
+
+
+                return;
+
+            }
+
+
+            /* MOVE GOAT */
+
+            if (
+                selected
+            ) {
+
+                if (
+                    !occupied(
+                        point.row,
+                        point.col
+                    )
+                    &&
+                    adjacent(
+                        selected,
+                        point
+                    )
+                ) {
+
+                    let index =
+                        findGoat(
+                            selected.row,
+                            selected.col
+                        );
+
+
+                    goats[index] = {
+
+                        row: point.row,
+
+                        col: point.col
+
+                    };
+
+
+                    selected = null;
+
+
+                    turn = "tiger";
+
+
+                    message.innerText =
+                        "Tiger turn: click the Tiger.";
+
+
+                    updateUI();
+
+                    draw();
+
+                }
+
+            }
+
+        }
+
+
+        /* =====================
+           TIGER TURN
+        ===================== */
+
+        else {
+
+            /* SELECT TIGER */
+
+            if (
+
+                point.row ===
+                tiger.row
+
+                &&
+
+                point.col ===
+                tiger.col
+
+            ) {
+
+                selected = point;
+
+
+                message.innerText =
+                    "Tiger selected. Click an empty point to move.";
+
+
+                draw();
+
+
+                return;
+
+            }
+
+
+            if (!selected) {
+
+                message.innerText =
+                    "Click the Tiger first.";
+
+                return;
+
+            }
+
+
+            /* NORMAL MOVE */
+
+            if (
+                !occupied(
+                    point.row,
+                    point.col
+                )
+            ) {
+
+                moveTiger(point);
+
+                return;
+
+            }
+
+
+            /* CAPTURE */
+
+            if (
+                findGoat(
+                    point.row,
+                    point.col
+                ) !== -1
+
+                &&
+
+                adjacent(
+                    tiger,
+                    point
+                )
+            ) {
+
+                captureGoat(point);
+
+            }
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   START WITH MAIN MENU
+===================================================== */
+
+showMenu();
+
+</script>
+
+</body>
+</html>

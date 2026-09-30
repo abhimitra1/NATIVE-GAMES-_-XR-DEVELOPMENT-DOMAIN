@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bagha Mandari — Tigers &amp; Herd</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main>
+        <section id="homeScreen" class="screen home-screen">
+            <div class="home-card">
+                <div class="home-icon" aria-hidden="true">🐯</div>
+                <h1>Bagha Mandari</h1>
+                <p class="subtitle">Tigers &amp; Herd</p>
+                <p class="intro">Place the herd, block the tigers and survive their attacks.</p>
+                <button id="startSetupButton" class="button button-primary">▶ Start Game</button>
+                <button id="howToPlayButton" class="button button-secondary">❓ How to Play</button>
+            </div>
+        </section>
+
+        <section id="setupScreen" class="screen hidden">
+            <div class="panel setup-panel">
+                <h1>Game Setup</h1>
+
+                <h2>Choose Your Side</h2>
+                <div class="option-row">
+                    <button class="choice-card side-choice selected" data-side="tiger" aria-pressed="true">
+                        <span>🐯</span><strong>Tiger</strong>
+                    </button>
+                    <button class="choice-card side-choice" data-side="herd" aria-pressed="false">
+                        <span>🐐</span><strong>Herd</strong>
+                    </button>
+                </div>
+
+                <h2>Choose Piece Colour</h2>
+                <div class="colour-row" aria-label="Choose piece colour">
+                    <button class="colour-choice selected" data-colour="#d97827" style="--swatch:#d97827" aria-label="Orange" aria-pressed="true"></button>
+                    <button class="colour-choice" data-colour="#3478b8" style="--swatch:#3478b8" aria-label="Blue" aria-pressed="false"></button>
+                    <button class="colour-choice" data-colour="#43864b" style="--swatch:#43864b" aria-label="Green" aria-pressed="false"></button>
+                    <button class="colour-choice" data-colour="#9b59a5" style="--swatch:#9b59a5" aria-label="Purple" aria-pressed="false"></button>
+                </div>
+
+                <div class="setup-actions">
+                    <button id="setupBackButton" class="button button-secondary">← Back</button>
+                    <button id="beginGameButton" class="button button-primary">▶ Start Game</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="howToPlayScreen" class="screen hidden">
+            <div class="panel instructions-panel">
+                <h1>How to Play</h1>
+                <ul>
+                    <li>Herd places pieces on empty points. Once all 15 pieces are placed, the herd can move along the lines.</li>
+                    <li>Tigers move along connected lines to empty points.</li>
+                    <li>Tigers can jump over a herd piece to capture it when the next point is empty.</li>
+                    <li>Tigers win after 6 captures.</li>
+                    <li>The herd wins by blocking the tigers so they cannot make a legal move.</li>
+                </ul>
+                <button id="rulesBackButton" class="button button-secondary">← Back</button>
+            </div>
+        </section>
+
+        <section id="gameScreen" class="screen game-screen hidden">
+            <header class="game-header">
+                <h1>🐯 Bagha Mandari</h1>
+                <p class="subtitle">Tigers &amp; Herd</p>
+                <div class="game-info">
+                    <span id="turnText">Turn: Herd</span>
+                    <span id="herdText">Herd placed: 0 / 15</span>
+                    <span id="captureText">Captures: 0 / 6</span>
+                </div>
+            </header>
+
+            <p id="statusMessage" class="status-message" aria-live="polite">Place a herd piece on an empty point.</p>
+            <canvas id="gameCanvas" aria-label="Bagha Mandari game board"></canvas>
+
+            <div class="game-actions">
+                <button id="restartButton" class="button button-secondary">Restart Game</button>
+                <button id="gameHomeButton" class="button button-secondary">Home</button>
+            </div>
+        </section>
+    </main>
+
+    <div id="gameOverScreen" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="winnerText">
+        <div class="modal-card">
+            <h2 id="winnerText">Game Over</h2>
+            <p id="winnerMessage">The game has ended.</p>
+            <div class="modal-actions">
+                <button id="playAgainButton" class="button button-primary">Play Again</button>
+                <button id="gameOverHomeButton" class="button button-secondary">Home</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>

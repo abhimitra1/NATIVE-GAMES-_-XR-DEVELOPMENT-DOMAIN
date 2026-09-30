@@ -1,0 +1,439 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+
+    background:
+        radial-gradient(circle at top, #8b5a2b, #3b1f0f);
+
+    color: white;
+
+    display: flex;
+    justify-content: center;
+
+    padding: 35px 15px;
+}
+
+.game-container {
+    width: 100%;
+    max-width: 1100px;
+
+    text-align: center;
+}
+
+
+/* =====================
+   TITLE
+===================== */
+
+h1 {
+    font-size: 52px;
+    color: #ffd166;
+
+    text-shadow:
+        0 3px 5px #000;
+
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: #f5deb3;
+    font-size: 18px;
+    margin-bottom: 30px;
+}
+
+
+/* =====================
+   SCORE
+===================== */
+
+.score-board {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background: rgba(0, 0, 0, 0.45);
+
+    border: 2px solid #c17b3a;
+    border-radius: 20px;
+
+    padding: 18px 30px;
+
+    margin-bottom: 30px;
+}
+
+.player {
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+
+    min-width: 150px;
+}
+
+.player span {
+    color: #f5deb3;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.player strong {
+    font-size: 32px;
+    color: #ffd166;
+}
+
+.turn {
+    background: #ffd166;
+    color: #3b1f0f;
+
+    padding: 12px 25px;
+
+    border-radius: 30px;
+
+    font-weight: bold;
+}
+
+
+/* =====================
+   BOARD
+===================== */
+
+.board {
+    display: grid;
+
+    grid-template-columns: 120px 1fr 120px;
+    grid-template-rows: 150px 15px 150px;
+
+    gap: 15px;
+
+    padding: 30px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #9b5a25,
+            #63300f
+        );
+
+    border: 12px solid #3c1d0b;
+
+    border-radius: 35px;
+
+    box-shadow:
+        0 20px 40px rgba(0,0,0,.6),
+        inset 0 0 25px rgba(0,0,0,.5);
+}
+
+
+/* =====================
+   BANK
+===================== */
+
+.bank {
+    width: 105px;
+    height: 145px;
+
+    background:
+        radial-gradient(
+            circle,
+            #9b5a25,
+            #3c1d0b
+        );
+
+    border: 5px solid #d49a5a;
+
+    border-radius: 50%;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+
+    box-shadow:
+        inset 0 0 20px #000,
+        0 5px 10px rgba(0,0,0,.5);
+
+    margin: auto;
+}
+
+.bank span {
+    font-size: 14px;
+    color: #f5deb3;
+}
+
+.bank strong {
+    font-size: 32px;
+    color: #ffd166;
+}
+
+.bank-left {
+    grid-column: 1;
+    grid-row: 1 / 4;
+}
+
+.bank-right {
+    grid-column: 3;
+    grid-row: 1 / 4;
+}
+
+
+/* =====================
+   CUPS
+===================== */
+
+.cups {
+    display: grid;
+
+    grid-template-columns:
+        repeat(7, 1fr);
+
+    gap: 12px;
+
+    align-items: center;
+}
+
+.opponent {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.player-side {
+    grid-column: 2;
+    grid-row: 3;
+}
+
+
+/* =====================
+   CUP
+===================== */
+
+.cup {
+    width: 82px;
+    height: 82px;
+
+    margin: auto;
+
+    border-radius: 50%;
+
+    border: 5px solid #d49a5a;
+
+    background:
+        radial-gradient(
+            circle at 35% 30%,
+            #d69b55,
+            #8b4e20 55%,
+            #3c1d0b
+        );
+
+    color: white;
+
+    font-size: 25px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    box-shadow:
+        inset 0 8px 15px rgba(0,0,0,.7),
+        0 5px 10px rgba(0,0,0,.4);
+
+    transition: .2s;
+}
+
+.cup:hover {
+    transform: scale(1.08);
+
+    border-color: #ffd166;
+
+    box-shadow:
+        0 0 20px #ffd166,
+        inset 0 8px 15px rgba(0,0,0,.7);
+}
+
+.cup.selected {
+    transform: scale(1.15);
+
+    border-color: #ffd166;
+
+    box-shadow:
+        0 0 30px #ffd166;
+}
+
+
+/* =====================
+   DIVIDER
+===================== */
+
+.middle-line {
+    grid-column: 2;
+    grid-row: 2;
+
+    height: 5px;
+
+    background: #3c1d0b;
+
+    border-radius: 10px;
+}
+
+
+/* =====================
+   BUTTON
+===================== */
+
+.controls {
+    margin: 30px 0;
+}
+
+#newGame {
+    border: none;
+
+    background: #ffd166;
+    color: #3b1f0f;
+
+    padding: 14px 30px;
+
+    border-radius: 30px;
+
+    font-size: 17px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+#newGame:hover {
+    transform: scale(1.08);
+
+    background: #ffe29a;
+}
+
+
+/* =====================
+   RULES
+===================== */
+
+.rules {
+    text-align: left;
+
+    background: rgba(0,0,0,.35);
+
+    padding: 25px;
+
+    border-radius: 20px;
+
+    border: 1px solid rgba(255,255,255,.15);
+}
+
+.rules h2 {
+    color: #ffd166;
+
+    margin-bottom: 15px;
+}
+
+.rules li {
+    margin: 9px 0;
+
+    color: #f5deb3;
+}
+
+
+/* =====================
+   MOBILE
+===================== */
+
+@media (max-width: 850px) {
+
+    .board {
+        grid-template-columns: 80px 1fr 80px;
+
+        padding: 15px;
+
+        border-width: 7px;
+    }
+
+    .cup {
+        width: 55px;
+        height: 55px;
+
+        font-size: 18px;
+    }
+
+    .cups {
+        gap: 5px;
+    }
+
+    .bank {
+        width: 70px;
+        height: 110px;
+    }
+
+    .bank strong {
+        font-size: 22px;
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    h1 {
+        font-size: 36px;
+    }
+
+    .score-board {
+        padding: 12px;
+    }
+
+    .player {
+        min-width: 80px;
+    }
+
+    .turn {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+
+    .board {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+
+        gap: 15px;
+    }
+
+    .bank-left,
+    .bank-right,
+    .opponent,
+    .player-side,
+    .middle-line {
+        grid-column: 1;
+        grid-row: auto;
+    }
+
+    .bank {
+        width: 100%;
+        height: 60px;
+        border-radius: 20px;
+    }
+
+    .cups {
+        grid-template-columns: repeat(7, 1fr);
+    }
+
+    .cup {
+        width: 40px;
+        height: 40px;
+
+        border-width: 3px;
+
+        font-size: 15px;
+    }
+
+    .middle-line {
+        display: none;
+    }
+}

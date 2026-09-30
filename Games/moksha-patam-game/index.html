@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Moksha Patam</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Eczar:wght@500;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <button id="muteBtn" aria-label="Toggle sound" title="Toggle sound">🔊</button>
+  <h1>Moksha Patam</h1>
+  <p class="subtitle">संसार → मोक्ष · a journey from worldly life to liberation</p>
+</header>
+
+<div class="layout">
+  <div class="board-wrap">
+    <div class="board-frame">
+      <div class="board" id="board"></div>
+    </div>
+    <p class="legend">Good deeds (ladders) raise you toward liberation; bad deeds (snakes) pull you back to worldly life. Reach square 100 to attain moksha.</p>
+  </div>
+
+  <div class="panel">
+    <div class="card" id="setupCard">
+      <h2>Begin the journey</h2>
+      <div class="row">
+        <label for="numPlayers">Travellers</label>
+        <select id="numPlayers">
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select>
+      </div>
+      <div class="row">
+        <label for="exactFinish">Exact-finish required</label>
+        <div class="toggle on" id="exactFinish" role="switch" aria-checked="true" tabindex="0" aria-label="Toggle exact finish rule"></div>
+      </div>
+      <div class="row">
+        <label for="sixAgain">Six grants another roll</label>
+        <div class="toggle on" id="sixAgain" role="switch" aria-checked="true" tabindex="0" aria-label="Toggle rolling six grants another roll"></div>
+      </div>
+      <div class="row" style="justify-content:flex-end;">
+        <button id="startBtn">Start game</button>
+      </div>
+    </div>
+
+    <div class="card" id="playCard" style="display:none;">
+      <h2>Travellers</h2>
+      <div class="players-list" id="playersList"></div>
+      <div class="dice-area">
+        <div class="die" id="die">
+          <span class="pip" id="p1"></span><span class="pip" id="p2"></span><span class="pip" id="p3"></span>
+          <span class="pip" id="p4"></span><span class="pip" id="p5"></span><span class="pip" id="p6"></span>
+          <span class="pip" id="p7"></span><span class="pip" id="p8"></span><span class="pip" id="p9"></span>
+        </div>
+        <button id="rollBtn">Roll die</button>
+      </div>
+      <div class="banner" id="banner" style="margin-top:12px;">Roll to begin.</div>
+    </div>
+
+    <div class="card">
+      <h2>Journey log</h2>
+      <div class="log" id="log"><p>The board awaits your first roll.</p></div>
+    </div>
+
+    <div class="card" id="restartCard" style="display:none;">
+      <button id="restartBtn">New game</button>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

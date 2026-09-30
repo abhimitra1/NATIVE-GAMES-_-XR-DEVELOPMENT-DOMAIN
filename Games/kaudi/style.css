@@ -1,0 +1,936 @@
+/* ==========================================================================
+   KAUDI - INDIAN COWRIE SHELL SCORING GAME
+   Adhering strictly to IKS Games Design Bible v1.0 & 18_Kaudi Specification
+   Centurion University of Technology and Management (CUTM)
+   ========================================================================== */
+
+:root {
+  /* Design Bible Neutral & Surface Tokens (§2.1) */
+  --ink-900: #17120e;
+  --ink-700: #3b2f26;
+  --ink-500: #6b5b4b;
+  --stone-900: #241c16;
+  --stone-800: #2e241c;
+  --stone-700: #3a2e25;
+  --sand-050: #fbf4e8;
+  --sand-100: #f5e9d6;
+  --sand-200: #ebdbc0;
+  --sand-300: #dcc7a3;
+  --sand-400: #c6ac83;
+  --teak-600: #8a5a2b;
+  --teak-800: #5a3919;
+
+  /* Brand & Accent Tokens (§2.2) */
+  --haldi-400: #f2bc4b;
+  --haldi-500: #e8a317;
+  --haldi-600: #c4860c;
+  --indigo-500: #2f4b7c;
+  --indigo-700: #1d3357;
+  --sindoor-500: #c8402f;
+  --sindoor-700: #9e2f21;
+  --peacock-500: #10727f;
+  --terracotta-500: #b4552f;
+  --terracotta-700: #8a4222;
+
+  /* Player Specific Side Badges & Accents */
+  --p1-color: #c8402f; /* Sindoor */
+  --p2-color: #10727f; /* Peacock */
+  --p3-color: #e8a317; /* Haldi */
+  --p4-color: #2f4b7c; /* Indigo */
+
+  /* Typography (§3) */
+  --font-display: 'Tiro Devanagari Hindi', 'Cinzel', serif;
+  --font-body: 'Mukta', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* Sizing (§4) */
+  --unit-cell: 128px;
+  --space-8: 8px;
+  --space-16: 16px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-full: 9999px;
+
+  /* Theme-dependent board colors (default: Royal Teak) */
+  --board-bg-start: #351f0c;
+  --board-bg-end: #1f1105;
+  --board-ring: rgba(232, 163, 23, 0.35);
+  --board-mandala: rgba(242, 188, 75, 0.12);
+  --board-glow: rgba(232, 163, 23, 0.2);
+}
+
+/* Theme: Indigo Cloth */
+[data-theme="indigo"] {
+  --board-bg-start: #1c2b44;
+  --board-bg-end: #0e1624;
+  --board-ring: rgba(140, 180, 240, 0.3);
+  --board-mandala: rgba(140, 180, 240, 0.1);
+  --board-glow: rgba(74, 128, 219, 0.25);
+}
+
+/* Theme: Terracotta Clay */
+[data-theme="terracotta"] {
+  --board-bg-start: #481f12;
+  --board-bg-end: #270f08;
+  --board-ring: rgba(245, 160, 115, 0.3);
+  --board-mandala: rgba(245, 160, 115, 0.12);
+  --board-glow: rgba(200, 64, 47, 0.22);
+}
+
+/* ==========================================================================
+   RESET & BASE STYLES
+   ========================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  background-color: var(--stone-900);
+  color: var(--sand-050);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Authentic Textured Indian Heritage Background */
+body {
+  background: 
+    radial-gradient(circle at 50% 30%, rgba(232, 163, 23, 0.08) 0%, transparent 65%),
+    radial-gradient(circle at 10% 90%, rgba(200, 64, 47, 0.06) 0%, transparent 50%),
+    linear-gradient(180deg, #1b140e 0%, var(--stone-900) 50%, #150f0a 100%);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Accessibility: Focus rings */
+:focus-visible {
+  outline: 3px solid var(--haldi-400);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   LAYOUT CONTAINERS
+   ========================================================================== */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: 100vh;
+  padding: var(--space-8);
+  position: relative;
+}
+
+/* HUD / HEADER BAR (§2.1 stone-700) */
+.hud-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-8) var(--space-16);
+  background: rgba(58, 46, 37, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--sand-400);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-8);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  z-index: 20;
+}
+
+.brand-section {
+  display: flex;
+  align-items: center;
+  gap: var(--space-16);
+}
+
+.brand-title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--haldi-400);
+  letter-spacing: 0.04em;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand-badge {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  background: rgba(232, 163, 23, 0.2);
+  color: var(--haldi-400);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(232, 163, 23, 0.4);
+}
+
+.hud-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+/* Icon Buttons */
+.btn-icon {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: var(--radius-sm);
+  background: var(--stone-800);
+  border: 1px solid var(--sand-400);
+  color: var(--sand-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-icon:hover {
+  background: var(--stone-700);
+  color: var(--haldi-400);
+  border-color: var(--haldi-500);
+  transform: translateY(-1px);
+}
+
+.btn-icon:active {
+  transform: translateY(1px);
+}
+
+/* ==========================================================================
+   GAME MAIN CONTENT
+   ========================================================================== */
+.game-viewport {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  position: relative;
+}
+
+@media (min-width: 900px) {
+  .game-viewport {
+    display: grid;
+    grid-template-columns: 280px 1fr 280px;
+    align-items: start;
+    gap: var(--space-16);
+  }
+}
+
+/* ==========================================================================
+   SIDEBARS: PLAYERS & SCORING STATUS
+   ========================================================================== */
+.sidebar-panel {
+  background: rgba(46, 36, 28, 0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--sand-400);
+  border-radius: var(--radius-md);
+  padding: var(--space-16);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
+}
+
+.panel-title {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: var(--haldi-400);
+  border-bottom: 1px solid rgba(198, 172, 131, 0.3);
+  padding-bottom: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.target-badge {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  background: rgba(232, 163, 23, 0.2);
+  color: var(--haldi-400);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+}
+
+/* Players List */
+.players-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.player-card {
+  background: rgba(36, 28, 22, 0.8);
+  border: 1px solid rgba(198, 172, 131, 0.2);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.player-card.active {
+  border-color: var(--haldi-500);
+  background: rgba(232, 163, 23, 0.12);
+  box-shadow: 0 0 16px rgba(232, 163, 23, 0.25), inset 0 0 8px rgba(232, 163, 23, 0.1);
+  transform: scale(1.02);
+}
+
+.player-card.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--haldi-500);
+}
+
+.player-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Side Glyph Badge (§0 non-negotiable #4: 24x24 badge) */
+.side-glyph-badge {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink-900);
+  border: 1.5px solid var(--sand-100);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+  flex-shrink: 0;
+}
+
+.p1-badge { background: var(--p1-color); color: #fff; }
+.p2-badge { background: var(--p2-color); color: #fff; }
+.p3-badge { background: var(--p3-color); color: var(--ink-900); }
+.p4-badge { background: var(--p4-color); color: #fff; }
+
+.player-names {
+  display: flex;
+  flex-direction: column;
+}
+
+.player-name {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--sand-050);
+}
+
+.player-type {
+  font-size: 0.75rem;
+  color: var(--sand-300);
+}
+
+.player-score-box {
+  text-align: right;
+}
+
+.player-score {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--haldi-400);
+  line-height: 1;
+}
+
+.player-score-label {
+  font-size: 0.7rem;
+  color: var(--sand-300);
+  text-transform: uppercase;
+}
+
+/* Progress bar towards target */
+.score-progress {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-full);
+  margin-top: 6px;
+  overflow: hidden;
+}
+
+.score-progress-fill {
+  height: 100%;
+  background: var(--haldi-500);
+  transition: width 0.4s ease-out;
+  border-radius: var(--radius-full);
+}
+
+/* ==========================================================================
+   CENTER ARENA: THE COWRIE TOSS SURFACE
+   ========================================================================== */
+.arena-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  width: 100%;
+}
+
+.turn-banner {
+  background: rgba(36, 28, 22, 0.9);
+  border: 1px solid var(--sand-400);
+  border-radius: var(--radius-full);
+  padding: 6px 20px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--sand-050);
+  margin-bottom: var(--space-12);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  text-align: center;
+}
+
+.turn-banner .highlight {
+  color: var(--haldi-400);
+}
+
+/* The Grand Circular Tossing Arena (Mandala & Floor) */
+.toss-arena {
+  width: 100%;
+  max-width: 480px;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--board-bg-start) 0%, var(--board-bg-end) 90%);
+  border: 8px solid var(--teak-800);
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.7),
+    inset 0 0 60px rgba(0, 0, 0, 0.8),
+    0 0 0 2px var(--sand-400),
+    0 0 35px var(--board-glow);
+  position: relative;
+  overflow: hidden;
+  perspective: 900px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+/* Traditional Mandala Rings on Playing Surface */
+.arena-mandala {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: 
+    radial-gradient(circle, transparent 20%, var(--board-ring) 21%, transparent 22%),
+    radial-gradient(circle, transparent 40%, var(--board-ring) 41%, transparent 42%),
+    radial-gradient(circle, transparent 65%, var(--board-ring) 66%, transparent 67%),
+    radial-gradient(circle, transparent 88%, var(--board-ring) 89%, transparent 90%);
+  opacity: 0.75;
+}
+
+.arena-mandala-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+/* Position Marks P1, P2, P3, P4 around circle (§Anthology sketch) */
+.player-spot {
+  position: absolute;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  font-family: var(--font-display);
+  background: rgba(23, 18, 14, 0.75);
+  border: 1px solid var(--sand-400);
+  color: var(--sand-200);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.spot-p1 { top: 12px; left: 50%; transform: translateX(-50%); border-color: var(--p1-color); }
+.spot-p2 { right: 12px; top: 50%; transform: translateY(-50%); border-color: var(--p2-color); }
+.spot-p3 { bottom: 12px; left: 50%; transform: translateX(-50%); border-color: var(--p3-color); }
+.spot-p4 { left: 12px; top: 50%; transform: translateY(-50%); border-color: var(--p4-color); }
+
+/* Center Shell Scatter Stage */
+.shells-stage {
+  position: absolute;
+  inset: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   AUTHENTIC REALISTIC COWRIE SHELLS
+   ========================================================================== */
+.cowrie-shell {
+  position: absolute;
+  width: 64px;
+  height: 92px;
+  transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform-style: preserve-3d;
+  filter: drop-shadow(0 14px 10px rgba(0, 0, 0, 0.55));
+}
+
+@media (min-width: 600px) {
+  .cowrie-shell {
+    width: 74px;
+    height: 108px;
+  }
+}
+
+/* Toss Animation Classes */
+.cowrie-shell.tossing {
+  animation: tossTumble 0.75s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+
+@keyframes tossTumble {
+  0% {
+    transform: translate(0, 0) scale(1) rotate(0deg) rotateX(0deg) rotateY(0deg);
+  }
+  35% {
+    transform: translate(var(--tx, 0), calc(var(--ty, 0) - 100px)) scale(1.35) rotate(220deg) rotateX(360deg) rotateY(180deg);
+  }
+  70% {
+    transform: translate(var(--tx, 0), calc(var(--ty, 0) + 10px)) scale(0.95) rotate(420deg) rotateX(680deg) rotateY(340deg);
+  }
+  85% {
+    transform: translate(var(--tx, 0), calc(var(--ty, 0) - 14px)) scale(1.05) rotate(500deg) rotateX(720deg) rotateY(360deg);
+  }
+  100% {
+    transform: translate(var(--tx, 0), var(--ty, 0)) scale(1) rotate(var(--rot, 0deg)) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  }
+}
+
+/* Shell Face Vectors */
+.shell-graphic {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ==========================================================================
+   RESULT & CONTROLS HUD
+   ========================================================================== */
+.toss-readout-card {
+  margin-top: var(--space-16);
+  background: rgba(36, 28, 22, 0.95);
+  border: 1px solid var(--sand-400);
+  border-radius: var(--radius-md);
+  padding: 12px 24px;
+  text-align: center;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+  width: 100%;
+  max-width: 480px;
+  min-height: 96px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.toss-readout-card.bonus {
+  border-color: var(--haldi-500);
+  background: rgba(232, 163, 23, 0.15);
+  box-shadow: 0 0 25px rgba(232, 163, 23, 0.4);
+}
+
+.toss-readout-card.bust {
+  border-color: var(--sindoor-500);
+  background: rgba(200, 64, 47, 0.15);
+  box-shadow: 0 0 25px rgba(200, 64, 47, 0.4);
+}
+
+.readout-title {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--haldi-400);
+  line-height: 1.2;
+}
+
+.readout-detail {
+  font-size: 0.9rem;
+  color: var(--sand-100);
+  margin-top: 4px;
+}
+
+.round-bank-display {
+  font-size: 0.85rem;
+  color: var(--haldi-400);
+  font-weight: 700;
+  background: rgba(23, 18, 14, 0.6);
+  padding: 2px 10px;
+  border-radius: var(--radius-full);
+  margin-top: 6px;
+  display: inline-block;
+}
+
+/* ACTION BUTTONS (§0 Non-negotiable #5: min touch target 88x88 at 1080p, spacious on web) */
+.action-controls {
+  display: flex;
+  gap: var(--space-12);
+  justify-content: center;
+  margin-top: var(--space-16);
+  width: 100%;
+  max-width: 480px;
+}
+
+/* Primary Action Button (Haldi-500 gold per Design Bible §2.2) */
+.btn-primary {
+  flex: 1;
+  min-height: 56px;
+  background: linear-gradient(180deg, var(--haldi-400) 0%, var(--haldi-500) 50%, var(--haldi-600) 100%);
+  color: var(--ink-900);
+  border: 1px solid var(--haldi-400);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-weight: 800;
+  font-size: 1.15rem;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(232, 163, 23, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: linear-gradient(180deg, #f7ce74 0%, var(--haldi-400) 50%, var(--haldi-500) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(232, 163, 23, 0.5);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: 0 2px 10px rgba(232, 163, 23, 0.3);
+}
+
+.btn-primary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  filter: grayscale(0.5);
+}
+
+/* Secondary Button (Bank Score) */
+.btn-secondary {
+  flex: 1;
+  min-height: 56px;
+  background: linear-gradient(180deg, var(--stone-700) 0%, var(--stone-800) 100%);
+  color: var(--sand-050);
+  border: 1px solid var(--sand-400);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 1.05rem;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  border-color: var(--haldi-400);
+  color: var(--haldi-400);
+  background: var(--stone-700);
+  transform: translateY(-2px);
+}
+
+.btn-secondary:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.btn-secondary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ==========================================================================
+   RIGHT SIDEBAR: VALUE TABLE & ROUND LOG
+   ========================================================================== */
+.table-scoring {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  margin-top: 4px;
+}
+
+.table-scoring th {
+  text-align: left;
+  padding: 6px 8px;
+  color: var(--sand-300);
+  border-bottom: 1px solid rgba(198, 172, 131, 0.2);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.table-scoring td {
+  padding: 6px 8px;
+  border-bottom: 1px solid rgba(198, 172, 131, 0.1);
+  color: var(--sand-100);
+}
+
+.table-scoring tr.active-row {
+  background: rgba(232, 163, 23, 0.15);
+  font-weight: 700;
+  color: var(--haldi-400);
+}
+
+.table-scoring .badge-bonus {
+  background: rgba(232, 163, 23, 0.25);
+  color: var(--haldi-400);
+  padding: 1px 6px;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  margin-left: 4px;
+  border: 1px solid rgba(232, 163, 23, 0.5);
+}
+
+.log-container {
+  max-height: 180px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-right: 4px;
+}
+
+/* Custom Scrollbar */
+.log-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.log-container::-webkit-scrollbar-thumb {
+  background: var(--sand-400);
+  border-radius: var(--radius-full);
+}
+
+.log-item {
+  font-size: 0.8rem;
+  padding: 4px 8px;
+  background: rgba(23, 18, 14, 0.6);
+  border-radius: 4px;
+  border-left: 3px solid var(--sand-400);
+  display: flex;
+  justify-content: space-between;
+}
+
+.log-item.bonus-log {
+  border-left-color: var(--haldi-500);
+}
+
+.log-item.bust-log {
+  border-left-color: var(--sindoor-500);
+}
+
+/* ==========================================================================
+   MODAL DIALOGS (DESIGN BIBLE §2.1 sand-050 card surface)
+   ========================================================================== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(23, 18, 14, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  padding: var(--space-16);
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-card {
+  background: var(--sand-050);
+  color: var(--ink-900);
+  border: 2px solid var(--teak-600);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 580px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+  transform: translateY(20px) scale(0.97);
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-overlay.active .modal-card {
+  transform: translateY(0) scale(1);
+}
+
+.modal-header {
+  padding: var(--space-16) var(--space-24);
+  border-bottom: 1px solid var(--sand-400);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--sand-100);
+}
+
+.modal-header h2 {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--teak-800);
+}
+
+.modal-body {
+  padding: var(--space-24);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  font-size: 0.95rem;
+  color: var(--ink-700);
+}
+
+.modal-body h3 {
+  font-family: var(--font-display);
+  color: var(--teak-800);
+  font-size: 1.15rem;
+  margin-top: 8px;
+}
+
+.modal-body p {
+  line-height: 1.6;
+}
+
+.modal-footer {
+  padding: var(--space-16) var(--space-24);
+  border-top: 1px solid var(--sand-400);
+  background: var(--sand-100);
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-12);
+}
+
+.btn-close-modal {
+  padding: 10px 20px;
+  background: var(--teak-800);
+  color: var(--sand-050);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-close-modal:hover {
+  background: var(--teak-600);
+}
+
+/* Settings Form Controls */
+.settings-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.settings-label {
+  font-weight: 700;
+  color: var(--ink-900);
+  font-size: 0.95rem;
+}
+
+.settings-control-row {
+  display: flex;
+  gap: var(--space-8);
+  flex-wrap: wrap;
+}
+
+.btn-toggle-option {
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  background: var(--sand-200);
+  border: 1px solid var(--sand-400);
+  color: var(--ink-900);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-toggle-option.active {
+  background: var(--haldi-500);
+  color: var(--ink-900);
+  border-color: var(--teak-800);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Victory Overlay Special */
+.victory-card {
+  text-align: center;
+  padding: var(--space-32) var(--space-24);
+}
+
+.victory-trophy {
+  font-size: 3.5rem;
+  margin-bottom: 8px;
+  animation: bounceTrophy 1s infinite alternate ease-in-out;
+}
+
+@keyframes bounceTrophy {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-10px); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .brand-title {
+    font-size: 1.2rem;
+  }
+  .hud-header {
+    padding: 6px 10px;
+  }
+  .toss-arena {
+    max-width: 320px;
+  }
+  .action-controls {
+    flex-direction: column;
+  }
+}

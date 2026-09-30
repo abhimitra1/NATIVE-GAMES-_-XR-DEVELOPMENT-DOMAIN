@@ -1,0 +1,320 @@
+/* ==========================================================================
+   DAHDI (DHD) - BOARD & PIECES STYLING
+   Theme: BT-2 Sandstone (Temple-floor stone, chiselled lines, warm bounce light)
+   ========================================================================== */
+
+.board-container {
+  position: relative;
+  width: min(88vmin, 680px);
+  height: min(88vmin, 680px);
+  margin: var(--space-16) auto;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Sandstone Board Frame (BT-2: #8A6F46) */
+.sandstone-board {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: var(--board-light-cell);
+  background-image: 
+    radial-gradient(ellipse at 30% 25%, rgba(255, 255, 255, 0.15) 0%, transparent 60%),
+    radial-gradient(ellipse at 75% 85%, rgba(90, 57, 25, 0.12) 0%, transparent 55%),
+    repeating-linear-gradient(45deg, rgba(198, 172, 131, 0.08) 0px, rgba(198, 172, 131, 0.08) 2px, transparent 2px, transparent 6px);
+  border: 14px solid var(--board-frame);
+  border-radius: 20px;
+  box-shadow: 
+    0 12px 36px rgba(23, 18, 14, 0.45),
+    inset 0 0 16px rgba(90, 57, 25, 0.35),
+    inset 0 2px 4px rgba(255, 255, 255, 0.25);
+  box-sizing: border-box;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* Outer stone rim accent */
+.sandstone-board::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 2px solid rgba(23, 18, 14, 0.4);
+  pointer-events: none;
+  border-radius: 6px;
+}
+
+/* SVG Grid Overlay */
+.board-svg-grid {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.grid-line {
+  stroke: var(--board-dark-cell);
+  stroke-width: 4.5px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0px 1px 1px rgba(255, 255, 255, 0.4)) drop-shadow(0px -1px 1px rgba(90, 57, 25, 0.35));
+}
+
+.grid-line.diagonal-line {
+  stroke: var(--board-dark-cell);
+  stroke-width: 3.5px;
+  stroke-dasharray: 6 3;
+  opacity: 0.85;
+}
+
+/* 24 Board Point Nodes */
+.board-points-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.board-point {
+  position: absolute;
+  width: 11%;
+  height: 11%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+  transition: transform 120ms ease;
+}
+
+/* Stone carved recess for the point */
+.point-recess {
+  width: 36%;
+  height: 36%;
+  border-radius: 50%;
+  background: var(--board-dark-cell);
+  box-shadow: 
+    inset 0 2px 3px rgba(36, 28, 22, 0.5),
+    0 1px 1px rgba(255, 255, 255, 0.6);
+  border: 1.5px solid rgba(90, 57, 25, 0.4);
+  transition: all 150ms ease;
+  pointer-events: none;
+}
+
+/* Hover effect on empty point */
+.board-point.can-place:hover .point-recess,
+.board-point.legal-dest:hover .point-recess {
+  transform: scale(1.3);
+  background: var(--haldi-400);
+  box-shadow: 0 0 10px var(--haldi-500);
+}
+
+/* ==========================================================================
+   GAME PIECES (Tokens)
+   Design Bible Section 4.3: 128x128 canvas, 112x112 art (8px bleed)
+   Side glyph badges: 24x24 bottom-right on every piece
+   ========================================================================== */
+
+.game-piece {
+  position: absolute;
+  width: 82%;
+  height: 82%;
+  border-radius: 50%;
+  z-index: 20;
+  cursor: pointer;
+  border: 3px solid var(--ink-900);
+  box-shadow: 
+    0 6px 14px rgba(23, 18, 14, 0.55),
+    inset 0 3px 6px rgba(255, 255, 255, 0.35),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: scale(1);
+  transition: transform var(--anim-piece-move), box-shadow 150ms ease;
+  will-change: transform;
+}
+
+/* Side A: Peacock (#10727F) */
+.game-piece.side-a {
+  background: radial-gradient(circle at 35% 30%, #1ea5b8 0%, var(--peacock-500) 60%, #094750 100%);
+}
+
+/* Side B: Haldi (#E8A317) */
+.game-piece.side-b {
+  background: radial-gradient(circle at 35% 30%, #fbd16d 0%, var(--haldi-500) 60%, #9a6505 100%);
+}
+
+/* Tactile concentric ring carving inside piece */
+.game-piece::before {
+  content: "";
+  position: absolute;
+  width: 64%;
+  height: 64%;
+  border-radius: 50%;
+  border: 1.5px dashed rgba(255, 255, 255, 0.4);
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.25);
+  pointer-events: none;
+}
+
+/* Mandatory Glyph Badge: 24x24 px at bottom-right */
+.glyph-badge {
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  width: var(--glyph-badge-size);
+  height: var(--glyph-badge-size);
+  background: var(--sand-050);
+  color: var(--ink-900);
+  border-radius: 50%;
+  border: 1.5px solid var(--ink-900);
+  font-size: 13px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  pointer-events: none;
+}
+
+/* Selected Piece state */
+.game-piece.is-selected {
+  transform: scale(1.12);
+  box-shadow: 
+    0 0 0 5px var(--state-selected),
+    0 10px 20px rgba(23, 18, 14, 0.6);
+  z-index: 30;
+}
+
+/* Threat / Removable enemy piece state */
+.game-piece.can-remove {
+  cursor: crosshair;
+  animation: threatPulse 1s infinite alternate ease-in-out;
+}
+
+.game-piece.can-remove::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 4px solid var(--state-threat);
+  background: rgba(209, 73, 91, 0.25);
+  pointer-events: none;
+}
+
+/* Colour-blind mode hatch pattern for threat */
+body.colour-blind-mode .game-piece.can-remove::after {
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(213, 94, 0, 0.35),
+    rgba(213, 94, 0, 0.35) 4px,
+    transparent 4px,
+    transparent 8px
+  );
+}
+
+@keyframes threatPulse {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.08); filter: drop-shadow(0 0 8px var(--state-threat)); }
+}
+
+/* State: Mill Member Highlight */
+.game-piece.in-mill {
+  border-color: #ffe699;
+}
+
+.game-piece.in-mill::before {
+  border: 2px solid rgba(255, 230, 153, 0.8);
+}
+
+/* ==========================================================================
+   STATE MARKERS & INDICATORS
+   ========================================================================== */
+
+/* Legal Destination Marker */
+.legal-dest-marker {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(94, 155, 74, 0.45);
+  border: 4px solid var(--state-legal);
+  pointer-events: none;
+  animation: destBounce 1.2s infinite ease-in-out;
+}
+
+@keyframes destBounce {
+  0%, 100% { transform: scale(0.95); opacity: 0.85; }
+  50% { transform: scale(1.08); opacity: 1; }
+}
+
+/* Hint Pulse Marker */
+.hint-marker {
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  border: 4px solid var(--state-hint);
+  animation: hintPulse var(--anim-hint-pulse) infinite ease-in-out;
+  pointer-events: none;
+}
+
+@keyframes hintPulse {
+  0% { transform: scale(0.85); opacity: 0.2; }
+  50% { transform: scale(1.25); opacity: 0.9; }
+  100% { transform: scale(0.85); opacity: 0.2; }
+}
+
+/* Illegal Shake Animation */
+.illegal-shake {
+  animation: shake 160ms linear;
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  50% { transform: translateX(8px); }
+  75% { transform: translateX(-4px); }
+  100% { transform: translateX(0); }
+}
+
+/* Capture Pop Animation */
+.piece-captured-pop {
+  animation: capturePop var(--anim-capture-pop) forwards;
+}
+
+@keyframes capturePop {
+  0% { transform: scale(1); opacity: 1; }
+  40% { transform: scale(1.25); opacity: 0.9; }
+  100% { transform: scale(0); opacity: 0; }
+}
+
+/* Mill Formed Flash Banner Overlay */
+.mill-flash-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  background: linear-gradient(135deg, var(--haldi-500), #ffc107);
+  color: var(--ink-900);
+  padding: var(--space-8) var(--space-24);
+  border-radius: 30px;
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: bold;
+  border: 2px solid var(--sand-050);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+  pointer-events: none;
+  opacity: 0;
+  z-index: 50;
+  transition: all 250ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.mill-flash-overlay.active {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1.1);
+}

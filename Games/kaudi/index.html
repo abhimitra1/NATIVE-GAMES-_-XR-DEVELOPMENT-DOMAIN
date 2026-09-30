@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Kaudi – Traditional Indian Cowrie Shell Game</title>
+  <meta name="description" content="Play Kaudi, the authentic Indian cowrie shell scoring game from An Anthology of Native & Indigenous Sports of India (Centurion University).">
+  
+  <!-- Google Fonts: Tiro Devanagari Hindi & Mukta (Design Bible §3) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;700;800&family=Tiro+Devanagari+Hindi:ital@0;1&display=swap" rel="stylesheet">
+  
+  <!-- Design System Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- TOP HUD & HEADER BAR -->
+    <header class="hud-header" role="banner">
+      <div class="brand-section">
+        <h1 class="brand-title">
+          <span>🐚</span> Kaudi <span class="brand-badge">IKS Collection</span>
+        </h1>
+      </div>
+
+      <div class="hud-actions">
+        <!-- Audio Mute/Unmute Toggle -->
+        <button id="btnSound" class="btn-icon" title="Toggle Sound" aria-label="Toggle Sound">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          </svg>
+        </button>
+
+        <!-- Rules & Scoring Modal Button -->
+        <button id="btnRules" class="btn-icon" title="Game Rules & Scoring" aria-label="View Rules">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+        </button>
+
+        <!-- Cultural Lore / Anthology Info Button -->
+        <button id="btnLore" class="btn-icon" title="Anthology History & Heritage" aria-label="Cultural Heritage">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+          </svg>
+        </button>
+
+        <!-- Settings Modal Button -->
+        <button id="btnSettings" class="btn-icon" title="Game Settings" aria-label="Game Settings">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </button>
+
+        <!-- Reset / New Match Button -->
+        <button id="btnRestart" class="btn-icon" title="New Match" aria-label="Restart Match">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <polyline points="1 20 1 14 7 14"></polyline>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- MAIN GAME VIEWPORT -->
+    <main class="game-viewport">
+      
+      <!-- LEFT SIDEBAR: PLAYERS & LEADERBOARD -->
+      <section class="sidebar-panel">
+        <div class="panel-title">
+          <span>Players</span>
+          <span id="targetBadge" class="target-badge">Target: 50</span>
+        </div>
+        <div id="playersContainer" class="players-container">
+          <!-- Dynamically populated player cards -->
+        </div>
+      </section>
+
+      <!-- CENTER: THE GRAND TOSSING ARENA -->
+      <section class="arena-wrapper">
+        <!-- Active Turn Indicator Banner -->
+        <div id="turnBanner" class="turn-banner">
+          <span>Player 1's Turn</span>
+        </div>
+
+        <!-- The Circular Indian Mandala Tossing Arena -->
+        <div class="toss-arena" id="tossArena">
+          <!-- Decorative Concentric Mandala Rings -->
+          <div class="arena-mandala"></div>
+
+          <!-- Subtle Sacred Geometry Overlay -->
+          <svg class="arena-mandala-svg" viewBox="0 0 400 400">
+            <circle cx="200" cy="200" r="160" fill="none" stroke="#E8A317" stroke-width="1.5" stroke-dasharray="6 4"/>
+            <circle cx="200" cy="200" r="110" fill="none" stroke="#E8A317" stroke-width="1"/>
+            <polygon points="200,45 290,290 60,140 340,140 110,290" fill="none" stroke="#E8A317" stroke-width="0.8" opacity="0.3"/>
+            <circle cx="200" cy="200" r="35" fill="none" stroke="#E8A317" stroke-width="1"/>
+          </svg>
+
+          <!-- Player Seating Markers P1, P2, P3, P4 around the floor per Anthology diagram -->
+          <div class="player-spot spot-p1">P1</div>
+          <div class="player-spot spot-p2">P2</div>
+          <div class="player-spot spot-p3">P3</div>
+          <div class="player-spot spot-p4">P4</div>
+
+          <!-- Shells Dynamic Physics Stage -->
+          <div id="shellsStage" class="shells-stage">
+            <!-- Shells dynamically inserted -->
+          </div>
+        </div>
+
+        <!-- Readout & Score Calculation Card -->
+        <div id="readoutCard" class="toss-readout-card">
+          <div id="readoutTitle" class="readout-title">Ready to Play</div>
+          <div id="readoutDetail" class="readout-detail">Tap the button below to toss the cowries!</div>
+          <div id="roundBankDisplay" class="round-bank-display" style="display: none;">Current Round Pot: 0 pts</div>
+        </div>
+
+        <!-- Controls HUD -->
+        <div class="action-controls">
+          <button id="btnToss" class="btn-primary" aria-label="Toss Cowrie Shells">
+            <span>✨</span> Toss Cowries
+          </button>
+          <button id="btnBank" class="btn-secondary" style="display: none;" aria-label="Bank Current Round Points">
+            <span>💰</span> Bank Points
+          </button>
+        </div>
+      </section>
+
+      <!-- RIGHT SIDEBAR: SCORING TABLE & MATCH LOG -->
+      <section class="sidebar-panel">
+        <div class="panel-title">
+          <span>Scoring Table</span>
+          <span style="font-size: 0.75rem; color: var(--sand-300);">Authentic Rules</span>
+        </div>
+
+        <table class="table-scoring">
+          <thead>
+            <tr>
+              <th>Combination</th>
+              <th>Points</th>
+              <th>Odds</th>
+            </tr>
+          </thead>
+          <tbody id="scoringTableBody">
+            <!-- Populated via script based on shell count -->
+          </tbody>
+        </table>
+
+        <div class="panel-title" style="margin-top: 8px;">
+          <span>Throw History</span>
+        </div>
+        <div id="logContainer" class="log-container">
+          <!-- Dynamic throw log items -->
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ==========================================================================
+       MODALS & DIALOGS
+       ========================================================================== -->
+
+  <!-- RULES & SCORING MODAL -->
+  <div id="rulesModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="rulesModalTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="rulesModalTitle">How to Play Kaudi</h2>
+        <button class="btn-close-modal" aria-label="Close Rules">&times;</button>
+      </div>
+      <div class="modal-body">
+        <h3>Objective</h3>
+        <p>
+          Be the first player or team to reach the target score (default 50 points) by tossing cowrie shells and scoring specific combinations based on how they land (mouth-up vs. mouth-down).
+        </p>
+
+        <h3>Scoring System (Standard 4 Shells)</h3>
+        <p>In traditional Indian Kaudi, points are calculated based on the aperture (mouth) orientation:</p>
+        <ul style="padding-left: 20px; line-height: 1.8;">
+          <li><strong>1 Mouth Up, 3 Down:</strong> 1 Point.</li>
+          <li><strong>2 Mouth Up, 2 Down:</strong> 2 Points (or Bust in Press-Your-Luck mode).</li>
+          <li><strong>3 Mouth Up, 1 Down:</strong> 3 Points.</li>
+          <li><strong>4 Mouth Up (All Up - Chhaka):</strong> 4 Points + <em>Bonus Throw</em>!</li>
+          <li><strong>0 Mouth Up (All Down - Ashta):</strong> 8 Points + <em>Bonus Throw</em>!</li>
+        </ul>
+
+        <h3>Game Modes</h3>
+        <p>
+          <strong>1. Classic Kaudi:</strong> Points add straight to your score. Scoring specials (All Up or All Down) earns an immediate bonus throw. First to cross the finish line wins!
+        </p>
+        <p>
+          <strong>2. Press-Your-Luck Mode:</strong> Each throw adds points to your round pot. You can <em>Bank</em> anytime to secure your points, or <em>Toss Again</em> to build the pot. Rolling zero points or a bust wipes out the unbanked pot!
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-close-modal">Got it</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CULTURAL HERITAGE & ANTHOLOGY LORE MODAL -->
+  <div id="loreModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="loreModalTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="loreModalTitle">Cultural Heritage of Kaudi</h2>
+        <button class="btn-close-modal" aria-label="Close Lore">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>
+          <em>Derived from “An Anthology of Native & Indigenous Sports of India” published by Centurion University of Technology and Management (CUTM).</em>
+        </p>
+
+        <h3>Ancient Roots & Currency</h3>
+        <p>
+          The use of cowrie shells (<em>kaudi</em> or <em>kauri</em>) dates back thousands of years across the Indian subcontinent. Historically, cowrie shells served as official currency, ornamental talismans, and sacred ceremonial objects.
+        </p>
+
+        <h3>Festivals & Folklore</h3>
+        <p>
+          References to cowrie games appear in classical sacred texts including the <em>Bhagavata Purana</em>. In Odisha, cowrie games are an indispensable custom during festivals such as <strong>Raja Parba</strong> and <strong>Laxmi Puja</strong>, where cowries are revered as sacred symbols of Goddess Lakshmi and harbingers of fortune and abundance.
+        </p>
+
+        <h3>The Heart of Indian Board Games</h3>
+        <p>
+          Beyond this standalone scoring contest, cowrie shells are the beating heart of India's classical race games — acting as the authentic randomizer for <em>Ashtapada</em>, <em>Chauka Bara</em>, <em>Pachisi</em>, <em>Ashta Chamma</em>, and <em>Pasha Palli</em>.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-close-modal">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SETTINGS MODAL -->
+  <div id="settingsModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="settingsModalTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="settingsModalTitle">Game Settings</h2>
+        <button class="btn-close-modal" aria-label="Close Settings">&times;</button>
+      </div>
+      <div class="modal-body">
+        <!-- Visual Theme -->
+        <div class="settings-group">
+          <label class="settings-label">Board Theme</label>
+          <div class="settings-control-row">
+            <button id="btnThemeTeak" class="btn-toggle-option active">Royal Teak</button>
+            <button id="btnThemeIndigo" class="btn-toggle-option">Indigo Cloth</button>
+            <button id="btnThemeClay" class="btn-toggle-option">Terracotta Clay</button>
+          </div>
+        </div>
+
+        <!-- Shell Count -->
+        <div class="settings-group">
+          <label class="settings-label">Number of Cowries</label>
+          <div class="settings-control-row">
+            <button id="btnShell4" class="btn-toggle-option active">4 Shells (Standard)</button>
+            <button id="btnShell6" class="btn-toggle-option">6 Shells (Chauka Bara)</button>
+            <button id="btnShell7" class="btn-toggle-option">7 Shells (Pachisi)</button>
+          </div>
+        </div>
+
+        <!-- Target Score -->
+        <div class="settings-group">
+          <label class="settings-label">Target Score</label>
+          <div class="settings-control-row">
+            <button id="btnTarget25" class="btn-toggle-option">25 Points (Quick)</button>
+            <button id="btnTarget50" class="btn-toggle-option active">50 Points (Standard)</button>
+            <button id="btnTarget100" class="btn-toggle-option">100 Points (Full Match)</button>
+          </div>
+        </div>
+
+        <!-- Game Mode -->
+        <div class="settings-group">
+          <label class="settings-label">Ruleset / Mode</label>
+          <div class="settings-control-row">
+            <button id="btnModeClassic" class="btn-toggle-option active">Classic Race</button>
+            <button id="btnModeLuck" class="btn-toggle-option">Press-Your-Luck</button>
+          </div>
+        </div>
+
+        <!-- Players -->
+        <div class="settings-group">
+          <label class="settings-label">Opponent Setup</label>
+          <div class="settings-control-row">
+            <button id="btnVsAI" class="btn-toggle-option active">Vs AI</button>
+            <button id="btnPassPlay" class="btn-toggle-option">Pass & Play</button>
+          </div>
+        </div>
+
+        <!-- Player Count -->
+        <div class="settings-group">
+          <label class="settings-label">Number of Players</label>
+          <div class="settings-control-row">
+            <button id="btnPlayerCount2" class="btn-toggle-option active">2 Players</button>
+            <button id="btnPlayerCount3" class="btn-toggle-option">3 Players</button>
+            <button id="btnPlayerCount4" class="btn-toggle-option">4 Players</button>
+          </div>
+        </div>
+
+        <!-- AI Difficulty -->
+        <div class="settings-group">
+          <label class="settings-label">AI Opponent Skill</label>
+          <div class="settings-control-row">
+            <button id="btnAIDiffEasy" class="btn-toggle-option">Easy (Casual)</button>
+            <button id="btnAIDiffMed" class="btn-toggle-option active">Medium (Standard)</button>
+            <button id="btnAIDiffHard" class="btn-toggle-option">Hard (Strategic EV)</button>
+          </div>
+        </div>
+
+        <!-- Language -->
+        <div class="settings-group">
+          <label class="settings-label">Language / भाषा / ଭାଷା</label>
+          <div class="settings-control-row">
+            <button id="btnLangEn" class="btn-toggle-option active">English</button>
+            <button id="btnLangHi" class="btn-toggle-option">हिंदी (Hindi)</button>
+            <button id="btnLangOd" class="btn-toggle-option">ଓଡ଼ିଆ (Odia)</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-close-modal">Save & Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- VICTORY CELEBRATION MODAL -->
+  <div id="victoryModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="winnerTitle">
+    <div class="modal-card victory-card">
+      <div class="victory-trophy">🏆</div>
+      <h2 id="winnerTitle" style="font-family: var(--font-display); font-size: 2rem; color: var(--haldi-500);">Victory!</h2>
+      <p id="winnerName" style="font-size: 1.4rem; font-weight: 700; margin-top: 8px; color: var(--ink-900);">Player 1</p>
+      <p id="winnerScore" style="font-size: 1.1rem; color: var(--ink-700); margin-top: 4px;">Score: 50</p>
+      <div style="margin-top: 24px;">
+        <button id="btnPlayAgain" class="btn-primary" style="margin: 0 auto; max-width: 240px;">
+          <span>🔄</span> Play Again
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC & AUDIO SERVICE -->
+  <script src="cowrie-dice.js"></script>
+  <script src="audio.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

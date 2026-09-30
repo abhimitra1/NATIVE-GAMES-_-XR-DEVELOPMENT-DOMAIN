@@ -1,0 +1,91 @@
+/* ==========================================================================
+   DAHDI (DHD) - MAIN STYLESHEET
+   Root layout, typography imports, and heritage background
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700;800&family=Tiro+Devanagari+Hindi:ital@0;1&display=swap');
+@import url('./tokens.css');
+@import url('./board.css');
+@import url('./ui.css');
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--stone-900);
+  color: var(--sand-050);
+  font-family: var(--font-body);
+  font-size: 16px;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Indian Heritage Jaali Pattern Background */
+body {
+  background-image: 
+    radial-gradient(circle at 50% 50%, rgba(58, 46, 37, 0.45) 0%, rgba(36, 28, 22, 0.95) 100%),
+    radial-gradient(circle at 10% 20%, rgba(232, 163, 23, 0.04) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(16, 114, 127, 0.04) 0%, transparent 40%),
+    linear-gradient(45deg, rgba(255, 255, 255, 0.015) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(255, 255, 255, 0.015) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, rgba(255, 255, 255, 0.015) 75%),
+    linear-gradient(-45deg, transparent 75%, rgba(255, 255, 255, 0.015) 75%);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 48px 48px, 48px 48px, 48px 48px, 48px 48px;
+}
+
+.app-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  justify-content: space-between;
+  padding-bottom: var(--space-16);
+}
+
+/* Main Game Area */
+.game-viewport {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--space-8);
+}
+
+/* Footer & Credits (Centurion University Native & Indigenous Sports) */
+.iks-footer {
+  text-align: center;
+  font-size: 12px;
+  color: var(--sand-400);
+  padding: var(--space-8) 0;
+  border-top: 1px solid rgba(198, 172, 131, 0.15);
+  margin-top: auto;
+}
+
+.iks-footer a {
+  color: var(--haldi-400);
+  text-decoration: none;
+}
+
+/* Accessibility focus visible rings */
+button:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 3px solid var(--haldi-500);
+  outline-offset: 2px;
+}
+
+/* Utility classes */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}

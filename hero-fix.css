@@ -1,0 +1,29 @@
+/* Hero composition: decorative pattern is a layer, not a grid item. */
+.hero-pattern {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hero-art {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.hero-copy {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+@media (max-width: 900px) {
+  .hero-copy {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .hero-art {
+    grid-column: 1;
+    grid-row: 2;
+  }
+}

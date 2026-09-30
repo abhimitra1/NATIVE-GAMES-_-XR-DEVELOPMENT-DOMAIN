@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ashtaa Chemmaa - Royal Heritage Indian Board Game</title>
+  <meta name="description" content="Play Ashtaa Chemmaa (Chauka Bara / Ashta Chamma), the ancient Indian strategic cowrie shell board game. Play vs smart AI bots or local pass-and-play multiplayer!">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐚</text></svg>">
+</head>
+<body>
+  <div class="ambient-pattern"></div>
+  <div id="confetti-container" class="confetti-container"></div>
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="logo-group">
+      <div class="game-logo-icon">🐚</div>
+      <div>
+        <h1 class="logo-title">ASHTAA CHEMMAA</h1>
+        <div class="logo-sub">ANCIENT INDIAN ROYAL STRATEGY</div>
+      </div>
+    </div>
+
+    <div class="header-controls">
+      <button id="new-match-btn" class="icon-btn" title="Start a New Match">
+        <span>⚔️</span> New Match
+      </button>
+      <button id="toggle-path-btn" class="icon-btn" title="Toggle 25-step path visualization">
+        <span>🗺️</span> Guide Path
+      </button>
+      <button id="music-toggle-btn" class="icon-btn" title="Toggle Indian Ambient Tanpura Music">
+        <span>🎵</span> Music
+      </button>
+      <button id="sound-toggle-btn" class="icon-btn" title="Toggle Sound Effects">
+        <span class="icon">🔊</span> Sound
+      </button>
+      <button id="rules-btn" class="icon-btn" title="View Game Rules">
+        <span>📖</span> Rules
+      </button>
+      <button id="settings-btn" class="icon-btn" title="Game Settings">
+        <span>⚙️</span> Settings
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Game Viewport -->
+  <main class="game-viewport">
+    <!-- Left Sidebar: Red (0) & Yellow (2) Bases -->
+    <section class="sidebar-left">
+      <div class="player-base" id="player-base-0" style="--player-color: var(--p-red)"></div>
+      <div class="player-base" id="player-base-2" style="--player-color: var(--p-yellow)"></div>
+    </section>
+
+    <!-- Center Stage: Turn Banner, Board & Action Toolbar -->
+    <section class="board-stage">
+      <!-- Turn Banner -->
+      <div class="turn-banner" id="turn-banner">
+        <div class="turn-text-group">
+          <div class="turn-player-title" id="turn-player-name">Red Player</div>
+          <div class="turn-prompt" id="turn-prompt">Roll the cowrie shells to begin.</div>
+        </div>
+        <div class="turn-action-indicators">
+          <div id="roll-result-badge" class="roll-result-badge hidden">
+            <span id="roll-result-text">ASHTA! (8)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5x5 Game Board Container -->
+      <div class="board-container" id="board-container" data-theme="heritage">
+        <div class="board-brass-corners"></div>
+        <svg class="path-overlay-svg" id="path-overlay-svg"></svg>
+        <div class="game-board" id="game-board"></div>
+      </div>
+
+      <!-- Speed & Utility Toolbar -->
+      <div class="speed-toolbar">
+        <div class="speed-group">
+          <span class="speed-label">Speed:</span>
+          <button class="speed-btn active" data-speed="1">1x</button>
+          <button class="speed-btn" data-speed="2">2x</button>
+          <button class="speed-btn" data-speed="4">4x</button>
+        </div>
+        <button id="undo-btn" class="icon-btn" disabled title="Undo last human move">
+          <span>↩️</span> Undo
+        </button>
+      </div>
+    </section>
+
+    <!-- Right Sidebar: Blue (1) & Green (3) Bases, Cowries & Log -->
+    <section class="sidebar-right">
+      <div class="player-base" id="player-base-1" style="--player-color: var(--p-blue)"></div>
+      <div class="player-base" id="player-base-3" style="--player-color: var(--p-green)"></div>
+
+      <!-- Cowrie Rolling Arena -->
+      <div class="cowrie-arena-card">
+        <div class="arena-title">COWRIE SHELLS</div>
+        <div class="cowrie-bowl" id="cowrie-bowl" title="Click to Roll!">
+          <div class="cowrie-shell closed" id="shell-0"></div>
+          <div class="cowrie-shell closed" id="shell-1"></div>
+          <div class="cowrie-shell closed" id="shell-2"></div>
+          <div class="cowrie-shell closed" id="shell-3"></div>
+        </div>
+
+        <button id="roll-btn" class="roll-btn pulse-glow">
+          <span>ROLL COWRIES</span>
+          <kbd>Space</kbd>
+        </button>
+
+        <div class="cowrie-legend">
+          <div class="legend-item"><span>0 Open:</span> <strong>Ashta (8) 🌟</strong></div>
+          <div class="legend-item"><span>4 Open:</span> <strong>Chamma (4) 🌟</strong></div>
+          <div class="legend-item"><span>1 Open:</span> <strong>1 Move</strong></div>
+          <div class="legend-item"><span>2/3 Open:</span> <strong>2 / 3 Moves</strong></div>
+        </div>
+      </div>
+
+      <!-- Game History Log -->
+      <div class="history-card">
+        <div class="card-header-sm">
+          <span>MATCH LOG</span>
+          <span style="font-size: 0.7rem; color: #a0aec0;">REAL-TIME</span>
+        </div>
+        <div class="history-list" id="history-list"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==========================================================================
+       Modals
+       ========================================================================== -->
+
+  <!-- Match Setup Modal -->
+  <div class="modal-overlay hidden" id="match-modal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h2 class="modal-title">⚔️ MATCH SETUP</h2>
+        <button class="close-btn" data-close="match-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <h3>SELECT GAME MODE</h3>
+        <div class="mode-options-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px;">
+          <button class="icon-btn active mode-btn" data-mode="1p_3bot" style="padding: 12px; justify-content: center;">
+            👤 1 Player vs 3 Bots
+          </button>
+          <button class="icon-btn mode-btn" data-mode="2p_local" style="padding: 12px; justify-content: center;">
+            👥 2 Players (Pass & Play)
+          </button>
+          <button class="icon-btn mode-btn" data-mode="4p_local" style="padding: 12px; justify-content: center;">
+            👥 4 Players (Pass & Play)
+          </button>
+          <button class="icon-btn mode-btn" data-mode="bot_battle" style="padding: 12px; justify-content: center;">
+            🤖 4 Bots (Watch Battle)
+          </button>
+        </div>
+
+        <h3>BOT DIFFICULTY</h3>
+        <div style="display: flex; gap: 10px; margin-bottom: 16px;">
+          <button class="icon-btn diff-btn" data-diff="easy" style="flex: 1; justify-content: center;">Easy</button>
+          <button class="icon-btn active diff-btn" data-diff="medium" style="flex: 1; justify-content: center;">Medium</button>
+          <button class="icon-btn diff-btn" data-diff="master" style="flex: 1; justify-content: center;">Master</button>
+        </div>
+
+        <h3>RULE PREFERENCES</h3>
+        <label style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px; cursor: pointer;">
+          <input type="checkbox" id="rule-capture-extra" checked>
+          <span>Capture gives extra turn</span>
+        </label>
+        <label style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px; cursor: pointer;">
+          <input type="checkbox" id="rule-exact-finish" checked>
+          <span>Exact roll required to finish in center goal</span>
+        </label>
+        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+          <input type="checkbox" id="rule-require-capture">
+          <span>Classic Rule: Must capture at least 1 piece to enter inner ring</span>
+        </label>
+      </div>
+      <div class="modal-footer">
+        <button class="icon-btn" data-close="match-modal">Cancel</button>
+        <button id="start-match-confirm-btn" class="icon-btn active" style="padding: 10px 24px;">Start Match</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rules & Strategy Modal -->
+  <div class="modal-overlay hidden" id="rules-modal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h2 class="modal-title">📖 ASHTAA CHEMMAA RULES</h2>
+        <button class="close-btn" data-close="rules-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <h3>OVERVIEW</h3>
+        <p>Ashtaa Chemmaa (also known as Chauka Bara, Katte Mane, or Daayam) is an ancient Indian cross-and-circle board game dating back centuries. It is the tactical ancestor of modern Ludo and Pachisi.</p>
+
+        <h3>THE 5x5 BOARD</h3>
+        <p>The board consists of 25 squares. The outer ring contains 16 squares, the inner ring contains 8 squares, and the center square (3,3) is the goal. Each player has 4 pieces.</p>
+
+        <h3>SAFE SQUARES (GADDI)</h3>
+        <p>The squares marked with ornate crosses (Red: 3,1; Yellow: 1,3; Blue: 3,5; Green: 5,3) and the Center Goal (3,3) are Safe Squares. Pieces on safe squares cannot be captured, and multiple pieces can safely rest there.</p>
+
+        <h3>COWRIE SHELL SCORING</h3>
+        <p>Four cowrie shells are tossed on each turn:</p>
+        <ul style="margin-left: 20px; margin-top: 6px;">
+          <li><strong>0 Open (All closed):</strong> ASHTA! 8 moves + <em>EXTRA TURN!</em></li>
+          <li><strong>4 Open (All open):</strong> CHAMMA! 4 moves + <em>EXTRA TURN!</em></li>
+          <li><strong>1 Open:</strong> 1 move</li>
+          <li><strong>2 Open:</strong> 2 moves</li>
+          <li><strong>3 Open:</strong> 3 moves</li>
+        </ul>
+
+        <h3>ENTERING THE BOARD</h3>
+        <p>A piece in reserve can ONLY enter the track when you roll an <strong>ASHTA (8)</strong> or <strong>CHAMMA (4)</strong>! It enters onto your home safe square and you get an extra throw.</p>
+
+        <h3>CAPTURING (VETTU)</h3>
+        <p>When you land on an opponent's piece on any regular (unsafe) square, that piece is captured and sent back to their home reserve! Capturing also grants you an extra roll.</p>
+
+        <h3>WINNING</h3>
+        <p>The first player to navigate all 4 pieces through the outer perimeter, spiral into the inner track, and reach the Center Goal (3,3) with an exact roll wins!</p>
+      </div>
+      <div class="modal-footer">
+        <button class="icon-btn active" data-close="rules-modal">Understood</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div class="modal-overlay hidden" id="settings-modal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h2 class="modal-title">⚙️ GAME SETTINGS</h2>
+        <button class="close-btn" data-close="settings-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <h3>BOARD THEME</h3>
+        <select id="theme-select" style="width: 100%; padding: 10px; background: #1a233a; color: #fff; border: 1px solid var(--gold-primary); border-radius: 8px; font-family: inherit; margin-bottom: 16px;">
+          <option value="heritage">Royal Heritage Wood & Brass</option>
+          <option value="festive">Vibrant Rangoli Silk</option>
+        </select>
+
+        <h3>AUDIO SETTINGS</h3>
+        <label style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; cursor: pointer;">
+          <span>Sound Effects (Clatter, Hops, Fanfares)</span>
+          <input type="checkbox" id="setting-sfx" checked>
+        </label>
+        <label style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; cursor: pointer;">
+          <span>Ambient Indian Drone (Tanpura)</span>
+          <input type="checkbox" id="setting-music">
+        </label>
+        <label style="display: flex; align-items: center; justify-content: space-between; cursor: pointer;">
+          <span>Voice Announcer ("Ashta 8!", "Chamma 4!")</span>
+          <input type="checkbox" id="setting-voice" checked>
+        </label>
+      </div>
+      <div class="modal-footer">
+        <button class="icon-btn active" data-close="settings-modal">Save & Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Victory Modal -->
+  <div class="modal-overlay hidden" id="victory-modal">
+    <div class="modal-dialog victory-dialog">
+      <div class="victory-crown">👑</div>
+      <h2 class="winner-name" id="winner-name">RED PLAYER WINS!</h2>
+      <p style="color: #a4b3d6; margin-bottom: 16px;">All 4 pieces have triumphed into the Center Goal!</p>
+      
+      <div class="victory-stats" id="winner-stats" style="background: rgba(0,0,0,0.4); border-radius: 10px; padding: 14px; margin-bottom: 20px; text-align: left;"></div>
+
+      <div style="display: flex; gap: 10px; justify-content: center;">
+        <button id="rematch-btn" class="icon-btn active" style="padding: 12px 28px; font-size: 1rem;">
+          ⚔️ Play Rematch
+        </button>
+        <button class="icon-btn" data-close="victory-modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/board.js"></script>
+  <script src="js/rules.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/ai.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/ui.js"></script>
+  <script>
+    // App Initialization & Modal Management
+    document.addEventListener('DOMContentLoaded', () => {
+      const engine = new GameEngine();
+      const ui = new GameUI(engine);
+
+      // Start initial game: 1 Player vs 3 Bots
+      engine.startNewGame({
+        playerConfigs: [
+          { id: 0, name: 'Red (You)', isBot: false, botDifficulty: 'medium' },
+          { id: 1, name: 'Blue Bot', isBot: true, botDifficulty: 'medium' },
+          { id: 2, name: 'Yellow Bot', isBot: true, botDifficulty: 'medium' },
+          { id: 3, name: 'Green Bot', isBot: true, botDifficulty: 'medium' }
+        ]
+      });
+
+      // Modal Triggers
+      function openModal(id) {
+        document.getElementById(id)?.classList.remove('hidden');
+      }
+      function closeModal(id) {
+        document.getElementById(id)?.classList.add('hidden');
+      }
+
+      document.querySelectorAll('[data-close]').forEach(btn => {
+        btn.addEventListener('click', () => closeModal(btn.dataset.close));
+      });
+
+      document.getElementById('new-match-btn')?.addEventListener('click', () => openModal('match-modal'));
+      document.getElementById('rules-btn')?.addEventListener('click', () => openModal('rules-modal'));
+      document.getElementById('settings-btn')?.addEventListener('click', () => openModal('settings-modal'));
+      document.getElementById('rematch-btn')?.addEventListener('click', () => {
+        closeModal('victory-modal');
+        engine.startNewGame();
+      });
+
+      // Match setup mode selection
+      let selectedMode = '1p_3bot';
+      let selectedDiff = 'medium';
+
+      document.querySelectorAll('.mode-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          selectedMode = btn.dataset.mode;
+        });
+      });
+
+      document.querySelectorAll('.diff-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          selectedDiff = btn.dataset.diff;
+        });
+      });
+
+      document.getElementById('start-match-confirm-btn')?.addEventListener('click', () => {
+        let playerConfigs;
+
+        if (selectedMode === '1p_3bot') {
+          playerConfigs = [
+            { id: 0, name: 'Red (You)', isBot: false, botDifficulty: selectedDiff },
+            { id: 1, name: 'Blue Bot', isBot: true, botDifficulty: selectedDiff },
+            { id: 2, name: 'Yellow Bot', isBot: true, botDifficulty: selectedDiff },
+            { id: 3, name: 'Green Bot', isBot: true, botDifficulty: selectedDiff }
+          ];
+        } else if (selectedMode === '2p_local') {
+          playerConfigs = [
+            { id: 0, name: 'Red Player', isBot: false, botDifficulty: selectedDiff },
+            { id: 1, name: 'Blue Player', isBot: false, botDifficulty: selectedDiff },
+            { id: 2, name: 'Yellow Bot', isBot: true, botDifficulty: selectedDiff },
+            { id: 3, name: 'Green Bot', isBot: true, botDifficulty: selectedDiff }
+          ];
+        } else if (selectedMode === '4p_local') {
+          playerConfigs = [
+            { id: 0, name: 'Red Player', isBot: false, botDifficulty: selectedDiff },
+            { id: 1, name: 'Blue Player', isBot: false, botDifficulty: selectedDiff },
+            { id: 2, name: 'Yellow Player', isBot: false, botDifficulty: selectedDiff },
+            { id: 3, name: 'Green Player', isBot: false, botDifficulty: selectedDiff }
+          ];
+        } else if (selectedMode === 'bot_battle') {
+          playerConfigs = [
+            { id: 0, name: 'Red Bot', isBot: true, botDifficulty: selectedDiff },
+            { id: 1, name: 'Blue Bot', isBot: true, botDifficulty: selectedDiff },
+            { id: 2, name: 'Yellow Bot', isBot: true, botDifficulty: selectedDiff },
+            { id: 3, name: 'Green Bot', isBot: true, botDifficulty: selectedDiff }
+          ];
+        }
+
+        const rules = {
+          captureGivesExtraTurn: document.getElementById('rule-capture-extra').checked,
+          requireExactFinish: document.getElementById('rule-exact-finish').checked,
+          requireCaptureForInnerRing: document.getElementById('rule-require-capture').checked
+        };
+
+        engine.startNewGame({
+          playerConfigs,
+          rules,
+          botDifficulty: selectedDiff
+        });
+
+        ui.renderPlayerBases();
+        closeModal('match-modal');
+      });
+
+      // Settings checkboxes
+      document.getElementById('setting-sfx')?.addEventListener('change', (e) => {
+        if (AudioService.isMuted === e.target.checked) {
+          AudioService.toggleMute();
+        }
+      });
+      document.getElementById('setting-music')?.addEventListener('change', (e) => {
+        if (AudioService.musicEnabled !== e.target.checked) {
+          AudioService.toggleMusic();
+        }
+      });
+      document.getElementById('setting-voice')?.addEventListener('change', (e) => {
+        AudioService.voiceEnabled = e.target.checked;
+      });
+    });
+  </script>
+</body>
+</html>

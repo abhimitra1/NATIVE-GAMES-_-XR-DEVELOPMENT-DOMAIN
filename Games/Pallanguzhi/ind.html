@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Pallanguzhi Game</title>
+
+<style>
+
+/* =========================
+   BASIC
+========================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+
+    background:
+        radial-gradient(circle at top, #9b642f, #241006);
+
+    color: white;
+
+    display: flex;
+    justify-content: center;
+
+    padding: 30px 15px;
+}
+
+
+/* =========================
+   MAIN
+========================= */
+
+.container {
+    width: 100%;
+    max-width: 1100px;
+    text-align: center;
+}
+
+.title {
+    font-size: 50px;
+    color: #ffd166;
+
+    text-shadow: 0 4px 5px #000;
+
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    color: #f5deb3;
+    margin-bottom: 25px;
+}
+
+
+/* =========================
+   SCORE
+========================= */
+
+.scoreboard {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background: rgba(0,0,0,0.45);
+
+    border: 2px solid #c58a4a;
+    border-radius: 20px;
+
+    padding: 15px 30px;
+
+    margin-bottom: 25px;
+}
+
+.player {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    min-width: 150px;
+}
+
+.player-name {
+    color: #f5deb3;
+    font-weight: bold;
+}
+
+.score {
+    font-size: 30px;
+    color: #ffd166;
+}
+
+.turn {
+    background: #ffd166;
+    color: #3b1f0f;
+
+    padding: 10px 25px;
+
+    border-radius: 30px;
+
+    font-weight: bold;
+}
+
+
+/* =========================
+   BOARD
+========================= */
+
+.board {
+    display: grid;
+
+    grid-template-columns: 120px 1fr 120px;
+
+    grid-template-rows:
+        150px
+        15px
+        150px;
+
+    gap: 15px;
+
+    padding: 30px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #a8662d,
+            #54250c
+        );
+
+    border: 12px solid #301405;
+
+    border-radius: 35px;
+
+    box-shadow:
+        0 20px 40px rgba(0,0,0,.6),
+        inset 0 0 25px rgba(0,0,0,.5);
+}
+
+
+/* =========================
+   BANK
+========================= */
+
+.bank {
+    width: 105px;
+    height: 140px;
+
+    margin: auto;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            #a86227,
+            #321306
+        );
+
+    border: 5px solid #d69a55;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+
+    box-shadow:
+        inset 0 0 20px #000,
+        0 5px 10px rgba(0,0,0,.5);
+}
+
+.bank-title {
+    font-size: 14px;
+    color: #f5deb3;
+}
+
+.bank-score {
+    font-size: 32px;
+    color: #ffd166;
+    font-weight: bold;
+}
+
+.bank-left {
+    grid-column: 1;
+    grid-row: 1 / 4;
+}
+
+.bank-right {
+    grid-column: 3;
+    grid-row: 1 / 4;
+}
+
+
+/* =========================
+   CUP ROW
+========================= */
+
+.cups {
+    display: grid;
+
+    grid-template-columns:
+        repeat(7, 1fr);
+
+    gap: 10px;
+
+    align-items: center;
+}
+
+.top-row {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.bottom-row {
+    grid-column: 2;
+    grid-row: 3;
+}
+
+
+/* =========================
+   CUPS
+========================= */
+
+.cup {
+    width: 82px;
+    height: 82px;
+
+    margin: auto;
+
+    border-radius: 50%;
+
+    border: 5px solid #d69a55;
+
+    background:
+        radial-gradient(
+            circle at 35% 30%,
+            #dba15e,
+            #8c4c1b 55%,
+            #351306
+        );
+
+    color: white;
+
+    font-size: 25px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    box-shadow:
+        inset 0 8px 15px rgba(0,0,0,.7),
+        0 5px 10px rgba(0,0,0,.5);
+
+    transition: .2s;
+}
+
+.cup:hover {
+    transform: scale(1.08);
+
+    border-color: #ffd166;
+
+    box-shadow:
+        0 0 20px #ffd166,
+        inset 0 8px 15px rgba(0,0,0,.7);
+}
+
+.cup:disabled {
+    cursor: not-allowed;
+    opacity: .45;
+}
+
+.cup.selected {
+    transform: scale(1.15);
+
+    border-color: #ffd166;
+
+    box-shadow:
+        0 0 30px #ffd166;
+}
+
+
+/* =========================
+   CENTER LINE
+========================= */
+
+.divider {
+    grid-column: 2;
+    grid-row: 2;
+
+    height: 5px;
+
+    background: #351306;
+
+    border-radius: 10px;
+}
+
+
+/* =========================
+   BUTTON
+========================= */
+
+.controls {
+    margin: 25px 0;
+}
+
+button.new-game {
+    border: none;
+
+    background: #ffd166;
+    color: #3b1f0f;
+
+    padding: 14px 30px;
+
+    border-radius: 30px;
+
+    font-size: 17px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+button.new-game:hover {
+    transform: scale(1.08);
+
+    background: #ffe29a;
+}
+
+
+/* =========================
+   MESSAGE
+========================= */
+
+.message {
+    min-height: 25px;
+
+    margin-bottom: 15px;
+
+    color: #ffd166;
+
+    font-weight: bold;
+}
+
+
+/* =========================
+   RULES
+========================= */
+
+.rules {
+    text-align: left;
+
+    background: rgba(0,0,0,.35);
+
+    border-radius: 20px;
+
+    padding: 25px;
+
+    margin-top: 20px;
+}
+
+.rules h2 {
+    color: #ffd166;
+    margin-bottom: 15px;
+}
+
+.rules li {
+    margin: 8px 0;
+    color: #f5deb3;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:850px) {
+
+    .board {
+        grid-template-columns:
+            80px 1fr 80px;
+
+        padding: 15px;
+        border-width: 7px;
+    }
+
+    .cups {
+        gap: 5px;
+    }
+
+    .cup {
+        width: 55px;
+        height: 55px;
+        font-size: 18px;
+    }
+
+    .bank {
+        width: 70px;
+        height: 110px;
+    }
+
+    .bank-score {
+        font-size: 22px;
+    }
+}
+
+
+@media(max-width:600px) {
+
+    .title {
+        font-size: 36px;
+    }
+
+    .scoreboard {
+        padding: 10px;
+    }
+
+    .player {
+        min-width: 70px;
+    }
+
+    .turn {
+        padding: 8px 10px;
+        font-size: 12px;
+    }
+
+    .board {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+    }
+
+    .bank-left,
+    .bank-right,
+    .top-row,
+    .bottom-row,
+    .divider {
+        grid-column: 1;
+        grid-row: auto;
+    }
+
+    .bank {
+        width: 100%;
+        height: 60px;
+        border-radius: 20px;
+    }
+
+    .cups {
+        grid-template-columns:
+            repeat(7, 1fr);
+    }
+
+    .cup {
+        width: 40px;
+        height: 40px;
+        font-size: 15px;
+        border-width: 3px;
+    }
+
+    .divider {
+        display: none;
+    }
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <h1 class="title">🌿 Pallanguzhi</h1>
+
+    <p class="subtitle">
+        Traditional Indian Mancala Game
+    </p>
+
+
+    <!-- SCOREBOARD -->
+
+    <div class="scoreboard">
+
+        <div class="player">
+
+            <span class="player-name">
+                PLAYER A
+            </span>
+
+            <span class="score" id="scoreA">
+                0
+            </span>
+
+        </div>
+
+
+        <div class="turn" id="turn">
+            Player A's Turn
+        </div>
+
+
+        <div class="player">
+
+            <span class="player-name">
+                PLAYER B
+            </span>
+
+            <span class="score" id="scoreB">
+                0
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- GAME BOARD -->
+
+    <div class="board">
+
+
+        <!-- B BANK -->
+
+        <div class="bank bank-left">
+
+            <span class="bank-title">
+                B BANK
+            </span>
+
+            <span class="bank-score" id="bankB">
+                0
+            </span>
+
+        </div>
+
+
+        <!-- PLAYER B CUPS -->
+
+        <div class="cups top-row">
+
+            <button class="cup" data-index="13">5</button>
+            <button class="cup" data-index="12">5</button>
+            <button class="cup" data-index="11">5</button>
+            <button class="cup" data-index="10">5</button>
+            <button class="cup" data-index="9">5</button>
+            <button class="cup" data-index="8">5</button>
+            <button class="cup" data-index="7">5</button>
+
+        </div>
+
+
+        <div class="divider"></div>
+
+
+        <!-- PLAYER A CUPS -->
+
+        <div class="cups bottom-row">
+
+            <button class="cup" data-index="0">5</button>
+            <button class="cup" data-index="1">5</button>
+            <button class="cup" data-index="2">5</button>
+            <button class="cup" data-index="3">5</button>
+            <button class="cup" data-index="4">5</button>
+            <button class="cup" data-index="5">5</button>
+            <button class="cup" data-index="6">5</button>
+
+        </div>
+
+
+        <!-- A BANK -->
+
+        <div class="bank bank-right">
+
+            <span class="bank-title">
+                A BANK
+            </span>
+
+            <span class="bank-score" id="bankA">
+                0
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- MESSAGE -->
+
+    <div class="message" id="message">
+        Choose a cup to begin.
+    </div>
+
+
+    <!-- NEW GAME -->
+
+    <div class="controls">
+
+        <button class="new-game" id="newGame">
+            🔄 New Game
+        </button>
+
+    </div>
+
+
+    <!-- RULES -->
+
+    <div class="rules">
+
+        <h2>How to Play</h2>
+
+        <ul>
+
+            <li>
+                Choose a cup containing seeds.
+            </li>
+
+            <li>
+                Pick up all seeds from that cup.
+            </li>
+
+            <li>
+                Drop one seed into each following cup.
+            </li>
+
+            <li>
+                Continue sowing around the board.
+            </li>
+
+            <li>
+                If the last seed lands in an empty cup on your side,
+                capture the opposite seeds.
+            </li>
+
+            <li>
+                When a player has no seeds available at the beginning
+                of their turn, the round ends.
+            </li>
+
+        </ul>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =====================================
+   PALLANGUZHI JAVASCRIPT
+===================================== */
+
+
+/* Initial seeds in each cup */
+
+const INITIAL_SEEDS = 5;
+
+
+/* 14 cups */
+
+let cups = Array(14).fill(INITIAL_SEEDS);
+
+
+/* Scores */
+
+let score = {
+    A: 0,
+    B: 0
+};
+
+
+/* Current player */
+
+let currentPlayer = "A";
+
+
+/* Game status */
+
+let gameOver = false;
+
+
+/* HTML elements */
+
+const cupButtons =
+    document.querySelectorAll(".cup");
+
+const scoreA =
+    document.getElementById("scoreA");
+
+const scoreB =
+    document.getElementById("scoreB");
+
+const bankA =
+    document.getElementById("bankA");
+
+const bankB =
+    document.getElementById("bankB");
+
+const turn =
+    document.getElementById("turn");
+
+const message =
+    document.getElementById("message");
+
+const newGame =
+    document.getElementById("newGame");
+
+
+
+/* =====================================
+   START GAME
+===================================== */
+
+function startGame() {
+
+    cups =
+        Array(14).fill(INITIAL_SEEDS);
+
+    score.A = 0;
+    score.B = 0;
+
+    currentPlayer = "A";
+
+    gameOver = false;
+
+    message.textContent =
+        "Player A: choose a cup.";
+
+    updateScreen();
+}
+
+
+
+/* =====================================
+   UPDATE SCREEN
+===================================== */
+
+function updateScreen() {
+
+    cupButtons.forEach(button => {
+
+        const index =
+            Number(button.dataset.index);
+
+        button.textContent =
+            cups[index];
+
+
+        /* Determine ownership */
+
+        let isOwnCup;
+
+        if (currentPlayer === "A") {
+
+            isOwnCup =
+                index >= 0 &&
+                index <= 6;
+
+        } else {
+
+            isOwnCup =
+                index >= 7 &&
+                index <= 13;
+        }
+
+
+        /* Disable invalid cups */
+
+        button.disabled =
+            gameOver ||
+            !isOwnCup ||
+            cups[index] === 0;
+
+    });
+
+
+    scoreA.textContent =
+        score.A;
+
+    scoreB.textContent =
+        score.B;
+
+    bankA.textContent =
+        score.A;
+
+    bankB.textContent =
+        score.B;
+
+    turn.textContent =
+        `Player ${currentPlayer}'s Turn`;
+}
+
+
+
+/* =====================================
+   CUP CLICK
+===================================== */
+
+cupButtons.forEach(button => {
+
+    button.addEventListener(
+        "click",
+        function() {
+
+            if (gameOver) {
+                return;
+            }
+
+            const index =
+                Number(this.dataset.index);
+
+            play(index);
+
+        }
+    );
+
+});
+
+
+
+/* =====================================
+   PLAY MOVE
+===================================== */
+
+function play(index) {
+
+    /* Check ownership */
+
+    if (currentPlayer === "A") {
+
+        if (index > 6) {
+            return;
+        }
+
+    } else {
+
+        if (index < 7) {
+            return;
+        }
+
+    }
+
+
+    /* Empty cup */
+
+    if (cups[index] === 0) {
+
+        message.textContent =
+            "That cup is empty.";
+
+        return;
+    }
+
+
+    /* Highlight */
+
+    const selected =
+        document.querySelector(
+            `[data-index="${index}"]`
+        );
+
+    selected.classList.add("selected");
+
+
+    setTimeout(() => {
+
+        selected.classList.remove(
+            "selected"
+        );
+
+        sow(index);
+
+    }, 200);
+
+}
+
+
+
+/* =====================================
+   SOWING
+===================================== */
+
+function sow(startIndex) {
+
+    let seeds =
+        cups[startIndex];
+
+
+    /* Empty selected cup */
+
+    cups[startIndex] = 0;
+
+
+    let position =
+        startIndex;
+
+
+    /* Drop seeds one by one */
+
+    while (seeds > 0) {
+
+        position++;
+
+        if (position >= 14) {
+            position = 0;
+        }
+
+        cups[position]++;
+
+        seeds--;
+
+    }
+
+
+    /* Check capture */
+
+    capture(position);
+
+
+    updateScreen();
+
+
+    /* Check whether current player
+       can continue */
+
+    if (!hasMove(currentPlayer)) {
+
+        endGame();
+
+        return;
+    }
+
+
+    /* Change player */
+
+    if (currentPlayer === "A") {
+
+        currentPlayer = "B";
+
+    } else {
+
+        currentPlayer = "A";
+    }
+
+
+    message.textContent =
+        `Player ${currentPlayer}: choose a cup.`;
+
+    updateScreen();
+
+}
+
+
+
+/* =====================================
+   CAPTURE
+===================================== */
+
+function capture(lastIndex) {
+
+    /* Last cup must have exactly
+       one seed */
+
+    if (cups[lastIndex] !== 1) {
+        return;
+    }
+
+
+    /* Check player's side */
+
+    let ownSide;
+
+    if (currentPlayer === "A") {
+
+        ownSide =
+            lastIndex >= 0 &&
+            lastIndex <= 6;
+
+    } else {
+
+        ownSide =
+            lastIndex >= 7 &&
+            lastIndex <= 13;
+    }
+
+
+    if (!ownSide) {
+        return;
+    }
+
+
+    /* Find opposite cup */
+
+    let opposite;
+
+    if (lastIndex < 7) {
+
+        opposite =
+            lastIndex + 7;
+
+    } else {
+
+        opposite =
+            lastIndex - 7;
+    }
+
+
+    /* Nothing to capture */
+
+    if (cups[opposite] === 0) {
+        return;
+    }
+
+
+    /* Capture both */
+
+    const captured =
+        cups[lastIndex] +
+        cups[opposite];
+
+
+    cups[lastIndex] = 0;
+
+    cups[opposite] = 0;
+
+
+    /* Add to score */
+
+    score[currentPlayer] +=
+        captured;
+
+
+    message.textContent =
+        `Player ${currentPlayer} captured ${captured} seeds!`;
+
+}
+
+
+
+/* =====================================
+   CHECK AVAILABLE MOVE
+===================================== */
+
+function hasMove(player) {
+
+    if (player === "A") {
+
+        for (let i = 0; i < 7; i++) {
+
+            if (cups[i] > 0) {
+                return true;
+            }
+
+        }
+
+    } else {
+
+        for (let i = 7; i < 14; i++) {
+
+            if (cups[i] > 0) {
+                return true;
+            }
+
+        }
+
+    }
+
+    return false;
+}
+
+
+
+/* =====================================
+   END GAME
+===================================== */
+
+function endGame() {
+
+    gameOver = true;
+
+
+    /* Collect remaining seeds */
+
+    let remainingA = 0;
+
+    let remainingB = 0;
+
+
+    for (let i = 0; i < 7; i++) {
+
+        remainingA += cups[i];
+
+        remainingB += cups[i + 7];
+
+    }
+
+
+    score.A += remainingA;
+
+    score.B += remainingB;
+
+A
+    cups.fill(0);
+
+
+    updateScreen();
+
+
+    let result;
+
+
+    if (score.A > score.B) {
+
+        result =
+            "🏆 Player A Wins!";
+
+    } else if (score.B > score.A) {
+
+        result =
+            "🏆 Player B Wins!";
+
+    } else {
+
+        result =
+            "🤝 It's a Draw!";
+    }
+
+
+    message.textContent =
+        result;
+
+
+    setTimeout(() => {
+
+        alert(
+            result +
+            "\n\nPlayer A: " +
+            score.A +
+            "\nPlayer B: " +
+            score.B
+        );
+
+    }, 100);
+
+}
+
+
+
+/* =====================================
+   NEW GAME
+===================================== */
+
+newGame.addEventListener(
+    "click",
+    startGame
+);
+
+
+/* Start automatically */
+
+startGame();
+
+</script>
+
+</body>
+</html>

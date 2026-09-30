@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#26090f">
+    <title>Panch Kone — The Five Corners Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="ambient-pattern" aria-hidden="true"></div>
+
+    <main id="home-screen" class="home-screen">
+        <header class="home-header">
+            <div class="header-emblem" aria-hidden="true">✥</div>
+            <h1 data-i18n="title">✦ PANCH KONE ✦</h1>
+            <p class="subtitle" data-i18n="subtitle">THE FIVE CORNERS GAME</p>
+        </header>
+
+        <section class="intro-card panel">
+            <div class="section-icon" aria-hidden="true">❧</div>
+            <div>
+                <h2 data-i18n="welcome">Welcome to Panch Kone</h2>
+                <p data-i18n="introduction">Choose your pieces, plan your moves and clear the board by jumping over the opponent's pieces.</p>
+            </div>
+            <button id="tutorial-button" class="outline-button" type="button">
+                <span aria-hidden="true">📖</span>
+                <span data-i18n="howToPlay">HOW TO PLAY</span>
+            </button>
+        </section>
+
+        <section class="choice-section" aria-labelledby="mode-heading">
+            <h2 id="mode-heading" class="section-heading" data-i18n="chooseMode">CHOOSE GAME MODE</h2>
+            <div class="mode-grid">
+                <button class="choice-card mode-card" type="button" data-mode="ai" aria-pressed="false">
+                    <span class="choice-icon" aria-hidden="true">🎮</span>
+                    <span class="choice-title" data-i18n="vsAi">VS AI</span>
+                    <span class="choice-description" data-i18n="vsAiDescription">Play against the computer</span>
+                </button>
+                <button class="choice-card mode-card is-selected" type="button" data-mode="two" aria-pressed="true">
+                    <span class="choice-icon" aria-hidden="true">👥</span>
+                    <span class="choice-title" data-i18n="twoPlayers">2 PLAYERS</span>
+                    <span class="choice-description" data-i18n="twoPlayersDescription">Local pass-and-play</span>
+                </button>
+                <button class="choice-card mode-card" type="button" data-mode="four" aria-pressed="false">
+                    <span class="choice-icon" aria-hidden="true">👨‍👩‍👧‍👦</span>
+                    <span class="choice-title" data-i18n="fourPlayers">4 PLAYERS</span>
+                    <span class="choice-description" data-i18n="fourPlayersDescription">Play with friends</span>
+                </button>
+            </div>
+        </section>
+
+        <section class="choice-section piece-section" aria-labelledby="piece-heading">
+            <h2 id="piece-heading" class="section-heading" data-i18n="choosePiece">CHOOSE YOUR PIECE</h2>
+            <div class="piece-grid">
+                <button class="choice-card piece-card is-selected" type="button" data-piece="gold" aria-pressed="true">
+                    <span class="piece-symbol symbol-gold" aria-hidden="true">◆</span>
+                    <span class="choice-title" data-i18n="gold">GOLD</span>
+                </button>
+                <button class="choice-card piece-card" type="button" data-piece="red" aria-pressed="false">
+                    <span class="piece-symbol symbol-red" aria-hidden="true">▲</span>
+                    <span class="choice-title" data-i18n="red">RED</span>
+                </button>
+                <button class="choice-card piece-card" type="button" data-piece="green" aria-pressed="false">
+                    <span class="piece-symbol symbol-green" aria-hidden="true">●</span>
+                    <span class="choice-title" data-i18n="green">GREEN</span>
+                </button>
+                <button class="choice-card piece-card" type="button" data-piece="blue" aria-pressed="false">
+                    <span class="piece-symbol symbol-blue" aria-hidden="true">★</span>
+                    <span class="choice-title" data-i18n="blue">BLUE</span>
+                </button>
+            </div>
+        </section>
+
+        <section class="settings-panel panel" aria-labelledby="settings-heading">
+            <h2 id="settings-heading" class="section-heading" data-i18n="settings">SETTINGS</h2>
+            <label class="setting-row" for="language-select">
+                <span data-i18n="language">LANGUAGE</span>
+                <select id="language-select" aria-label="Language">
+                    <option value="en">English</option>
+                    <option value="hi">हिन्दी</option>
+                </select>
+            </label>
+            <label class="setting-row setting-toggle" for="sound-toggle">
+                <span data-i18n="sound">SOUND</span>
+                <span class="toggle-control">
+                    <input id="sound-toggle" type="checkbox" checked>
+                    <span class="toggle-label" data-i18n="on">ON</span>
+                </span>
+            </label>
+            <label class="setting-row setting-toggle" for="ambience-toggle">
+                <span data-i18n="ambience">AMBIENCE</span>
+                <span class="toggle-control">
+                    <input id="ambience-toggle" type="checkbox" checked>
+                    <span class="toggle-label" data-i18n="on">ON</span>
+                </span>
+            </label>
+        </section>
+
+        <button id="begin-button" class="begin-button" type="button">
+            <span aria-hidden="true">✦</span>
+            <span data-i18n="begin">BEGIN THE GAME</span>
+            <span aria-hidden="true">✦</span>
+        </button>
+        <p id="home-status" class="home-status" role="status" aria-live="polite"></p>
+    </main>
+
+    <main id="game-screen" class="game-screen" hidden>
+        <div class="game-container">
+            <div class="game-toolbar">
+                <button id="home-button" class="home-button" type="button" aria-label="Home">
+                    <span aria-hidden="true">⌂</span>
+                    <span data-i18n="home">HOME</span>
+                </button>
+            </div>
+
+            <h1 data-i18n="title">✦ PANCH KONE ✦</h1>
+            <p class="subtitle" data-i18n="subtitle">THE FIVE CORNERS GAME</p>
+
+            <div id="board" aria-label="Panch Kone game board"></div>
+
+            <div class="info">
+                <p><span data-i18n="piecesRemaining">Pieces Remaining:</span> <span id="count">9</span></p>
+                <p id="message" aria-live="polite">Select a piece to start</p>
+            </div>
+
+            <button id="restart-button" class="restart-button" type="button">
+                <span aria-hidden="true">↻</span>
+                <span data-i18n="restart">Restart Game</span>
+            </button>
+        </div>
+    </main>
+
+    <div id="tutorial-modal" class="modal-backdrop" hidden>
+        <section class="tutorial-dialog panel" role="dialog" aria-modal="true" aria-labelledby="tutorial-title">
+            <div class="section-icon" aria-hidden="true">📖</div>
+            <h2 id="tutorial-title" data-i18n="tutorialTitle">How to Play</h2>
+            <ol>
+                <li data-i18n="tutorialSelect">Select one of your pieces.</li>
+                <li data-i18n="tutorialMove">Choose an empty point on the board to move to.</li>
+                <li data-i18n="tutorialJump">Jump over a piece to remove it.</li>
+                <li data-i18n="tutorialClear">Clear the opponent's pieces.</li>
+                <li data-i18n="tutorialWin">The player who completes the objective wins.</li>
+            </ol>
+            <button id="close-tutorial" class="outline-button" type="button" data-i18n="close">CLOSE</button>
+        </section>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>

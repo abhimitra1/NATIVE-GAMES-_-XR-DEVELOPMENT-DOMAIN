@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Dahdi (दाहदी / ଦାହଡ଼ି) — Traditional Indian Mills Board Game</title>
+  <meta name="description" content="Play Dahdi, the traditional Indian abstract strategy alignment game from the Nine Men's Morris family. Featuring Sandstone theme, Minimax AI, and cultural heritage design by Centurion University.">
+  <link rel="stylesheet" href="./styles/main.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='46' fill='%2310727F' stroke='%2317120E' stroke-width='6'/><text x='50' y='64' font-size='42' text-anchor='middle' fill='%23FBF4E8' font-weight='bold'>◆</text></svg>">
+</head>
+<body>
+  <div class="app-wrapper">
+    <!-- Top HUD Bar -->
+    <header class="game-hud" role="banner">
+      <div class="hud-brand">
+        <h1 class="hud-title" id="hud-main-title">दाहदी • Dahdi</h1>
+        <p class="hud-subtitle">Centurion University • Native & Indigenous Sports of India</p>
+      </div>
+      <div style="display: flex; gap: 8px;">
+        <button class="btn-icon" id="btn-rules" title="How to Play" aria-label="How to Play">?</button>
+        <button class="btn-icon" id="btn-settings" title="Settings" aria-label="Settings">⚙</button>
+      </div>
+    </header>
+
+    <!-- Player Profiles & Hand Bead Trays -->
+    <section class="players-tray-container" aria-label="Players Status">
+      <!-- Player A: Peacock -->
+      <div class="player-card side-a" id="player-card-a">
+        <div class="player-avatar" id="avatar-a" aria-hidden="true">◆</div>
+        <div class="player-info">
+          <div class="player-name-row">
+            <span class="player-name" id="name-a">Peacock</span>
+            <span class="player-status-tag" id="tag-a">Player 1</span>
+          </div>
+          <div class="bead-counter-row">
+            <span class="bead-counter-label">In Hand:</span>
+            <div class="beads-list" id="beads-a" aria-label="Peacock in-hand pieces"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Player B: Haldi -->
+      <div class="player-card side-b" id="player-card-b">
+        <div class="player-avatar" id="avatar-b" aria-hidden="true">○</div>
+        <div class="player-info">
+          <div class="player-name-row">
+            <span class="player-name" id="name-b">Haldi</span>
+            <span class="player-status-tag" id="tag-b">AI (Med)</span>
+          </div>
+          <div class="bead-counter-row">
+            <span class="bead-counter-label">In Hand:</span>
+            <div class="beads-list" id="beads-b" aria-label="Haldi in-hand pieces"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Turn Banner & Phase Indicator -->
+    <div class="turn-status-banner" role="status" aria-live="polite">
+      <div class="turn-status-text">
+        <span class="turn-indicator-dot" id="turn-dot"></span>
+        <span id="turn-status-text">Peacock Turn — Place Piece</span>
+      </div>
+      <span class="phase-pill" id="phase-pill">PHASE 1</span>
+    </div>
+
+    <!-- Main Game Viewport (Sandstone Board) -->
+    <main class="game-viewport" role="main">
+      <div class="board-container" id="board-container" aria-label="Dahdi 24-point concentric board">
+        <!-- Rendered by JS SVG -->
+      </div>
+    </main>
+
+    <!-- Bottom Controls Bar -->
+    <section class="game-controls-bar" aria-label="Game Controls">
+      <button class="btn-secondary" id="btn-undo" title="Undo Move (Shortcut: U)">
+        <span aria-hidden="true">↩</span> Undo
+      </button>
+      <button class="btn-secondary" id="btn-hint" title="Get Move Hint (Shortcut: H)">
+        <span aria-hidden="true">💡</span> Hint
+      </button>
+      <button class="btn-primary" id="btn-restart" title="Start New Match (Shortcut: R)">
+        <span aria-hidden="true">↻</span> New Match
+      </button>
+    </section>
+
+    <!-- Footer -->
+    <footer class="iks-footer" role="contentinfo">
+      <p>IKS Games Collection • Theme: BT-2 Sandstone • Rules derived from <em>An Anthology of Native & Indigenous Sports of India (CUTM, 2025)</em></p>
+    </footer>
+  </div>
+
+  <!-- Settings Modal Dialog -->
+  <div class="modal-overlay" id="settings-modal" role="dialog" aria-modal="true" aria-labelledby="settings-dialog-title">
+    <div class="dialog-panel">
+      <div class="dialog-header">
+        <h2 class="dialog-title" id="settings-dialog-title">Game Settings & Accessibility</h2>
+        <button class="dialog-close-btn" aria-label="Close dialog">✕</button>
+      </div>
+      <div class="dialog-content">
+        <div class="setting-item">
+          <div>
+            <div class="setting-label">Game Mode</div>
+            <div class="setting-desc">Choose opponent type</div>
+          </div>
+          <select class="select-input" id="select-game-mode">
+            <option value="vsAI">Play vs AI</option>
+            <option value="passAndPlay">2-Player Pass & Play</option>
+          </select>
+        </div>
+
+        <div class="setting-item">
+          <div>
+            <div class="setting-label">AI Difficulty</div>
+            <div class="setting-desc">Heuristic search depth</div>
+          </div>
+          <select class="select-input" id="select-difficulty">
+            <option value="easy">Easy (Depth 1, casual)</option>
+            <option value="medium" selected>Medium (Depth 3, standard)</option>
+            <option value="hard">Master (Depth 5, punishing)</option>
+          </select>
+        </div>
+
+        <div class="setting-item">
+          <div>
+            <div class="setting-label">Board Variant</div>
+            <div class="setting-desc">Standard 9-Men vs Diagonals (Anthology)</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="cb-diagonals">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-item">
+          <div>
+            <div class="setting-label">Colour-blind Safe Mode</div>
+            <div class="setting-desc">Okabe-Ito Vermillion & Blue, 32px glyphs</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="cb-colour-blind">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-item">
+          <div>
+            <div class="setting-label">Sound Effects Volume</div>
+            <div class="setting-desc">Procedural tactile wooden knocks</div>
+          </div>
+          <input type="range" class="range-slider" id="range-sfx" min="0" max="1" step="0.05" value="0.7">
+        </div>
+
+        <div class="setting-item">
+          <div>
+            <div class="setting-label">Tanpura Drone (Music)</div>
+            <div class="setting-desc">Traditional ambient acoustic drone</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="cb-tanpura">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-item">
+          <div>
+            <div class="setting-label">Reduce Motion</div>
+            <div class="setting-desc">Disable animations and camera shakes</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="cb-reduce-motion">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-item">
+          <div>
+            <div class="setting-label">Language / भाषा / ଭାଷା</div>
+            <div class="setting-desc">Display language</div>
+          </div>
+          <select class="select-input" id="select-language">
+            <option value="en">English</option>
+            <option value="hi">हिन्दी (Hindi)</option>
+            <option value="od">ଓଡ଼ିଆ (Odia)</option>
+          </select>
+        </div>
+      </div>
+      <div class="dialog-footer">
+        <button class="btn-primary dialog-close-btn" style="width: auto;">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- How to Play Modal Dialog -->
+  <div class="modal-overlay" id="rules-modal" role="dialog" aria-modal="true" aria-labelledby="rules-dialog-title">
+    <div class="dialog-panel">
+      <div class="dialog-header">
+        <h2 class="dialog-title" id="rules-dialog-title">How to Play Dahdi</h2>
+        <button class="dialog-close-btn" aria-label="Close dialog">✕</button>
+      </div>
+      <div class="dialog-content">
+        <h3 style="margin-top: 0; color: var(--haldi-600); font-family: var(--font-display);">Line up three, take one.</h3>
+        <p><strong>Dahdi</strong> is an ancient Indian member of the Morris / Mills alignment games family, recorded in <em>An Anthology of Native & Indigenous Sports of India</em> (Centurion University, 2025).</p>
+        
+        <h4 style="color: var(--ink-900); margin-bottom: 4px;">1. Phase 1 — Placement</h4>
+        <p>Players take turns placing their <strong>9 pieces</strong> on any empty intersection on the three concentric squares. If you align three pieces in a straight line (a <strong>Mill / Dahdi</strong>), you immediately remove one opponent piece from the board.</p>
+        <p style="font-size: 13px; color: var(--ink-700); background: var(--sand-200); padding: 8px; border-radius: 6px;">
+          <em>Removal Rule:</em> You cannot remove an enemy piece that is part of a formed mill, unless all enemy pieces are currently in mills.
+        </p>
+
+        <h4 style="color: var(--ink-900); margin-bottom: 4px;">2. Phase 2 — Movement</h4>
+        <p>Once all 18 pieces are on the board, players slide one piece per turn to an <strong>adjacent empty point</strong> along the marked lines. Forming a new mill allows you to remove an enemy piece.</p>
+
+        <h4 style="color: var(--ink-900); margin-bottom: 4px;">3. Phase 3 — Flying (Endgame)</h4>
+        <p>When a player is reduced to only <strong>3 pieces</strong>, their pieces gain the ability to "fly" — jumping to <strong>any empty point</strong> on the board.</p>
+
+        <h4 style="color: var(--ink-900); margin-bottom: 4px;">Winning the Game</h4>
+        <p>You win if:</p>
+        <ul>
+          <li>You reduce the opponent to <strong>2 pieces</strong> (unable to form a mill), or</li>
+          <li>The opponent has <strong>no legal moves</strong> (completely blocked/immobilized).</li>
+        </ul>
+
+        <h4 style="color: var(--ink-900); margin-bottom: 4px;">Keyboard Shortcuts</h4>
+        <p><code>U</code>: Undo &nbsp;|&nbsp; <code>H</code>: Hint &nbsp;|&nbsp; <code>R</code>: Rematch &nbsp;|&nbsp; <code>Esc</code>: Settings</p>
+      </div>
+      <div class="dialog-footer">
+        <button class="btn-primary dialog-close-btn" style="width: auto;">Got it</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Victory / Game Over Modal Dialog -->
+  <div class="modal-overlay" id="result-modal" role="dialog" aria-modal="true" aria-labelledby="result-title">
+    <div class="dialog-panel" style="text-align: center;">
+      <div class="dialog-header" style="justify-content: center;">
+        <h2 class="dialog-title" id="result-title">Victory!</h2>
+      </div>
+      <div class="dialog-content">
+        <div style="font-size: 54px; margin: 12px 0;">🏆</div>
+        <p id="result-subtitle" style="font-size: 17px; font-weight: 600; color: var(--ink-900);">Spectacular strategic alignment!</p>
+      </div>
+      <div class="dialog-footer" style="justify-content: center;">
+        <button class="btn-primary" id="btn-rematch">Play Again</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Marigold Petals Victory Canvas -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Application Logic -->
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>
